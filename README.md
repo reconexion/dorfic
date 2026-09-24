@@ -77,7 +77,7 @@ En Cloudflare: **Analytics & Logs → Web Analytics → Add a site**, copia el t
 
 Cada página se prerenderiza con:
 
-- `<title>` y meta description únicos, canónica, `hreflang` de los 5 idiomas + `x-default` (también dentro de `sitemap.xml`) y `robots` con `max-image-preview:large`.
+- `<title>` y meta description únicos, canónica, `hreflang` de los 5 idiomas + `x-default` y `robots` con `max-image-preview:large`.
 - Open Graph y Twitter Card con **imagen propia por herramienta** (`public/og/<slug>.png`, generadas con `npm run icons`).
 - JSON-LD: `Organization`, `WebSite`, `WebPage` (con `dateModified`), `SoftwareApplication`, `FAQPage`, `HowTo` (a partir de los pasos) y `BreadcrumbList`; el inicio incluye `ItemList` con todas las herramientas.
 - 19 páginas de herramienta con 600 a 800 palabras originales cada una, pensadas para búsquedas concretas ("comprimir imagen a 30 kb", "heic a png", "comprimir png"…).

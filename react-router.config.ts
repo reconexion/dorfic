@@ -2,7 +2,7 @@ import type { Config } from "@react-router/dev/config";
 import { existsSync } from "node:fs";
 import { mkdir, readFile, readdir, rename, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { INDEXABLE_PATHS, LOCALES, LOCALE_TAGS, NOT_FOUND_PATHS, PAGE_SLUGS, TOOL_SLUGS, type Target, localizePath } from "./src/config/paths";
+import { INDEXABLE_PATHS, LOCALES, NOT_FOUND_PATHS, PAGE_SLUGS, TOOL_SLUGS, type Target, localizePath } from "./src/config/paths";
 
 /**
  * Sitio 100% estático: sin SSR en producción, pero cada ruta se PRERENDERIZA
@@ -32,7 +32,9 @@ export default {
             await writeFile(full, html.replaceAll('<link rel="modulepreload" href=', '<link rel="modulepreload" fetchpriority="low" href='));
         }
 
-        // 2) sitemap.xml (con las versiones en cada idioma) y robots.txt a partir de la lista de rutas.
+        // 2) sitemap.xml y robots.txt a partir de la lista de rutas.
+        //    Los hreflang de cada idioma ya van en el <head> de cada página (src/lib/seo.ts), así que el sitemap
+        //    no repite <xhtml:link>: con elementos XHTML, Chrome lo pinta como página (texto corrido) en vez de XML.
         const today = new Date().toISOString().slice(0, 10);
         const abs = (p: string) => (p === "/" ? `${siteUrl}/` : `${siteUrl}${p}`);
         const targets: Target[] = [
@@ -43,20 +45,16 @@ export default {
         const urls = targets.flatMap((target) => {
             const priority = target.type === "home" ? "1.0" : target.type === "tool" ? "0.9" : "0.5";
             const image = target.type === "tool" ? `\n    <image:image>\n      <image:loc>${siteUrl}/og/${target.id}.png</image:loc>\n    </image:image>` : "";
-            const alternates = [
-                ...LOCALES.map((l) => `\n    <xhtml:link rel="alternate" hreflang="${LOCALE_TAGS[l]}" href="${abs(localizePath(l, target))}"/>`),
-                `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${abs(localizePath("es", target))}"/>`,
-            ].join("");
             return LOCALES.map(
                 (locale) =>
-                    `  <url>\n    <loc>${abs(localizePath(locale, target))}</loc>\n    <lastmod>${today}</lastmod>\n    <priority>${priority}</priority>${alternates}${image}\n  </url>`,
+                    `  <url>\n    <loc>${abs(localizePath(locale, target))}</loc>\n    <lastmod>${today}</lastmod>\n    <priority>${priority}</priority>${image}\n  </url>`,
             );
         });
         if (urls.length !== INDEXABLE_PATHS.length) throw new Error("sitemap.xml no coincide con INDEXABLE_PATHS");
 
         await writeFile(
             path.join(clientDir, "sitemap.xml"),
-            `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join("\n")}\n</urlset>\n`,
+            `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join("\n")}\n</urlset>\n`,
         );
         await writeFile(path.join(clientDir, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`);
 
