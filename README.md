@@ -27,6 +27,7 @@ npm run dev            # http://localhost:5173
 ```bash
 npm run build          # genera build/client (sitio estático listo para subir)
 npm run preview        # sirve build/client en http://localhost:4173
+npm start               # servidor de producción (Railway): usa $PORT o 8080, redirige por idioma y da el 404 de cada idioma
 npm run typecheck      # revisión de tipos
 ```
 
