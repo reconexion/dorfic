@@ -1,8 +1,13 @@
-import { LegalPage, legalMeta } from "@/components/content/legal-page";
-import { acerca } from "@/i18n/es/pages/legal";
+import { type LegalLoaderData, LegalPage, legalMeta } from "@/components/content/legal-page";
+import { resolvePath } from "@/config/paths";
+import { loadPageContent } from "@/i18n/content.server";
 
-export const meta = () => legalMeta(acerca, "/acerca");
+export async function loader({ request }: { request: Request }): Promise<LegalLoaderData> {
+    return { content: await loadPageContent(resolvePath(new URL(request.url).pathname).locale, "acerca") };
+}
 
-export default function Page() {
-    return <LegalPage content={acerca} />;
+export const meta = legalMeta("acerca");
+
+export default function Page({ loaderData }: { loaderData: LegalLoaderData }) {
+    return <LegalPage content={loaderData.content} />;
 }

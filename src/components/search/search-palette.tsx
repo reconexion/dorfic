@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { SearchLg } from "@untitledui/icons";
 import { AnimatePresence, m } from "motion/react";
-import { searchUi } from "@/i18n/es/search";
+import { useSearchDictionary } from "@/i18n";
 import { SearchBox } from "./search-box";
 
 /** Botón del header que abre la búsqueda en un panel flotante (también con Ctrl/Cmd + K). */
 export const SearchPalette = () => {
+    const { ui: searchUi } = useSearchDictionary();
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
@@ -39,7 +40,7 @@ export const SearchPalette = () => {
                 className="group inline-flex items-center gap-2 rounded-full border border-secondary bg-primary py-2 pr-2 pl-3 text-sm text-tertiary shadow-xs transition duration-150 hover:border-brand hover:text-secondary hover:shadow-md motion-safe:active:scale-[0.97] sm:pr-3"
             >
                 <SearchLg aria-hidden className="size-5 text-fg-brand-primary transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-6" />
-                <span className="hidden md:inline">Buscar herramienta</span>
+                <span className="hidden md:inline">{searchUi.label}</span>
                 <kbd className="hidden rounded-md border border-secondary px-1.5 py-0.5 font-sans text-xs text-quaternary lg:inline">{searchUi.shortcut}</kbd>
             </button>
 

@@ -4,8 +4,7 @@ import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useNavigate } from "react-router";
 import type { ToolSlug } from "@/config/paths";
 import { TOOLS } from "@/config/tools";
-import { fmt, useToolCards } from "@/i18n";
-import { searchKeywords, searchUi } from "@/i18n/es/search";
+import { fmt, useLocalePath, useSearchDictionary, useToolCards } from "@/i18n";
 import { searchTools } from "@/lib/search";
 import { cx } from "@/utils/cx";
 
@@ -18,13 +17,14 @@ interface SearchBoxProps {
 
 /** Placeholder animado: va mostrando ejemplos de búsqueda. */
 const AnimatedPlaceholder = ({ active }: { active: boolean }) => {
+    const { ui: searchUi } = useSearchDictionary();
     const [i, setI] = useState(0);
     const reduce = useReducedMotion();
     useEffect(() => {
         if (!active || reduce) return;
         const t = setInterval(() => setI((v) => (v + 1) % searchUi.placeholders.length), 2400);
         return () => clearInterval(t);
-    }, [active, reduce]);
+    }, [active, reduce, searchUi.placeholders.length]);
 
     return (
         <span aria-hidden className="pointer-events-none absolute inset-y-0 left-14 flex items-center overflow-hidden text-lg text-placeholder md:left-16">
@@ -51,6 +51,8 @@ const AnimatedPlaceholder = ({ active }: { active: boolean }) => {
  */
 export const SearchBox = ({ variant, autoFocus, onNavigate }: SearchBoxProps) => {
     const cards = useToolCards();
+    const { keywords, ui: searchUi } = useSearchDictionary();
+    const to = useLocalePath();
     const navigate = useNavigate();
     const id = useId();
     const inputRef = useRef<HTMLInputElement>(null);
@@ -59,9 +61,9 @@ export const SearchBox = ({ variant, autoFocus, onNavigate }: SearchBoxProps) =>
     const [active, setActive] = useState(0);
 
     const results = useMemo(() => {
-        const found = searchTools(query, cards, searchKeywords);
+        const found = searchTools(query, cards, keywords);
         return variant === "hero" ? found.slice(0, 6) : found;
-    }, [query, cards, variant]);
+    }, [query, cards, keywords, variant]);
 
     useEffect(() => setActive(0), [query]);
     useEffect(() => {
@@ -76,7 +78,7 @@ export const SearchBox = ({ variant, autoFocus, onNavigate }: SearchBoxProps) =>
         setFocused(false);
         inputRef.current?.blur();
         onNavigate?.();
-        navigate(`/${slug}`);
+        navigate(to({ type: "tool", id: slug }));
     };
 
     const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -99,7 +101,12 @@ export const SearchBox = ({ variant, autoFocus, onNavigate }: SearchBoxProps) =>
     const isHero = variant === "hero";
 
     const list = (
-        <ul id={listId} role="listbox" aria-label={searchUi.label} className={cx("flex flex-col gap-0.5", isHero ? "p-2" : "max-h-[60dvh] overflow-y-auto p-2")}>
+        <ul
+            id={listId}
+            role="listbox"
+            aria-label={searchUi.label}
+            className={cx("flex flex-col gap-0.5", isHero ? "p-2" : "max-h-[60dvh] overflow-y-auto p-2")}
+        >
             {results.length === 0 && (
                 <li role="option" aria-selected={false} aria-disabled className="px-3 py-6 text-center text-sm text-tertiary">
                     {searchUi.empty}
@@ -147,7 +154,10 @@ export const SearchBox = ({ variant, autoFocus, onNavigate }: SearchBoxProps) =>
                         </span>
                         <ArrowRight
                             aria-hidden
-                            className={cx("relative ml-auto size-5 shrink-0 transition duration-150", selected ? "translate-x-0 text-fg-brand-primary opacity-100" : "-translate-x-1 opacity-0")}
+                            className={cx(
+                                "relative ml-auto size-5 shrink-0 transition duration-150",
+                                selected ? "translate-x-0 text-fg-brand-primary opacity-100" : "-translate-x-1 opacity-0",
+                            )}
                         />
                     </m.li>
                 );
@@ -160,9 +170,7 @@ export const SearchBox = ({ variant, autoFocus, onNavigate }: SearchBoxProps) =>
             <div
                 className={cx(
                     "group relative flex items-center rounded-2xl bg-primary transition-shadow duration-200",
-                    isHero
-                        ? "shadow-lg ring-2 ring-brand-200 focus-within:shadow-xl focus-within:ring-brand-500"
-                        : "border-b border-secondary",
+                    isHero ? "shadow-lg ring-2 ring-brand-200 focus-within:shadow-xl focus-within:ring-brand-500" : "border-b border-secondary",
                 )}
             >
                 {isHero && <span aria-hidden className="search-glow pointer-events-none absolute -inset-1 -z-10 rounded-[20px] opacity-60 blur-md" />}

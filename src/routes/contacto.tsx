@@ -1,13 +1,20 @@
 import { Mail01 } from "@untitledui/icons";
-import { LegalPage, legalMeta } from "@/components/content/legal-page";
+import { type LegalLoaderData, LegalPage, legalMeta } from "@/components/content/legal-page";
+import { resolvePath } from "@/config/paths";
 import { CONTACT_EMAIL } from "@/config/site";
-import { contacto } from "@/i18n/es/pages/legal";
+import { useUi } from "@/i18n";
+import { loadPageContent } from "@/i18n/content.server";
 
-export const meta = () => legalMeta(contacto, "/contacto");
+export async function loader({ request }: { request: Request }): Promise<LegalLoaderData> {
+    return { content: await loadPageContent(resolvePath(new URL(request.url).pathname).locale, "contacto") };
+}
 
-export default function Page() {
+export const meta = legalMeta("contacto");
+
+export default function Page({ loaderData }: { loaderData: LegalLoaderData }) {
+    const ui = useUi();
     return (
-        <LegalPage content={contacto}>
+        <LegalPage content={loaderData.content}>
             <a
                 href={`mailto:${CONTACT_EMAIL}`}
                 className="mt-8 flex items-center gap-4 rounded-xl border border-secondary p-5 shadow-xs transition duration-150 hover:border-brand hover:shadow-md"
@@ -16,7 +23,7 @@ export default function Page() {
                     <Mail01 aria-hidden className="size-6" />
                 </span>
                 <span className="flex flex-col">
-                    <span className="text-sm text-tertiary">Correo electrónico</span>
+                    <span className="text-sm text-tertiary">{ui.contactPage.emailLabel}</span>
                     <span className="text-lg font-semibold text-brand-secondary">{CONTACT_EMAIL}</span>
                 </span>
             </a>

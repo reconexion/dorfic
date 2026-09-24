@@ -1,4 +1,6 @@
-export const home = {
+import type { HomeContent } from "../../types";
+
+export const home: HomeContent = {
     title: "Comprimir y convertir imágenes gratis en línea | Dorfic",
     metaDescription:
         "Comprime imágenes a 10, 20, 50, 100 o 200 KB, convierte HEIC, PNG, WebP y JPG y cambia su tamaño gratis. Todo en tu navegador, sin subir tus fotos.",

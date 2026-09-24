@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { m } from "motion/react";
 import { Mascot } from "page-mascot";
+import { useUi } from "@/i18n";
 import { cx } from "@/utils/cx";
 
 /**
@@ -9,6 +10,7 @@ import { cx } from "@/utils/cx";
  * y reserva su espacio desde el HTML para no causar saltos de layout.
  */
 export const FoxMascot = ({ size = 120, className }: { size?: number; className?: string }) => {
+    const ui = useUi();
     const [mounted, setMounted] = useState(false);
     useEffect(() => {
         // Esperamos a que la página termine de cargar (y a un momento libre) para no competir con el contenido.
@@ -33,7 +35,7 @@ export const FoxMascot = ({ size = 120, className }: { size?: number; className?
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ type: "spring", stiffness: 380, damping: 18 }}
                 >
-                    <Mascot directions="/mascots/fox-directions.webp" reactions="/mascots/fox-reactions.webp" size={size} label="zorro de Dorfic" />
+                    <Mascot directions="/mascots/fox-directions.webp" reactions="/mascots/fox-reactions.webp" size={size} label={ui.brand.mascot} />
                 </m.div>
             )}
         </div>

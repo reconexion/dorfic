@@ -41,3 +41,55 @@ export interface LegalPageContent {
     updated?: string;
     sections: ContentSection[];
 }
+
+/** Portada: el texto largo se carga en el prerender (loader). */
+export interface HomeContent {
+    title: string;
+    metaDescription: string;
+    h1: string;
+    h1Highlight: string;
+    subtitle: string;
+    intentsLabel: string;
+    groups: Record<"convert" | "compress" | "resize", string>;
+    toolsHeading: string;
+    features: { title: string; body: string }[];
+    aboutHeading: string;
+    about: string[];
+}
+
+/** Buscador e inicio rápido. */
+export interface SearchDictionary {
+    /** Palabras con las que la gente busca cada herramienta (sinónimos, errores comunes, intención). */
+    keywords: Record<ToolSlug, string[]>;
+    /** Atajos "¿qué necesitas?" del inicio. */
+    intents: { label: string; slug: ToolSlug }[];
+    ui: {
+        label: string;
+        placeholderPrefix: string;
+        /** Se muestran uno por uno, animados, como sugerencias en el buscador. */
+        placeholders: string[];
+        empty: string;
+        shortcut: string;
+        open: string;
+        close: string;
+        results: string;
+        hint: string;
+    };
+    quickStart: {
+        title: string;
+        detected: string;
+        question: string;
+        recommended: string;
+        change: string;
+        unsupported: string;
+    };
+}
+
+export type { UiDictionary } from "./es/ui";
+
+/** Todo lo que necesita un idioma para la interfaz. */
+export interface Dictionary {
+    ui: import("./es/ui").UiDictionary;
+    toolCards: Record<ToolSlug, ToolCard>;
+    search: SearchDictionary;
+}

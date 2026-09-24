@@ -1,9 +1,12 @@
-/** Textos de interfaz en español de México. Para agregar otro idioma, copia este archivo a /pt o /en. */
+/** Textos de interfaz en español de México. Los demás idiomas usan este archivo como referencia (UiDictionary). */
 export const ui = {
     locale: "es-MX",
+    /** Unidades de tamaño de archivo. */
+    units: { b: "B", kb: "KB", mb: "MB" },
     brand: {
         homeLink: "Dorfic, ir al inicio",
         tagline: "Herramientas de imagen gratis, privadas y rápidas",
+        mascot: "zorro de Dorfic",
     },
     nav: {
         tools: "Herramientas",
@@ -14,11 +17,15 @@ export const ui = {
         openMenu: "Abrir menú",
         closeMenu: "Cerrar menú",
         skipToContent: "Saltar al contenido",
+        contact: "Contacto",
+        privacy: "Aviso de privacidad",
+        terms: "Términos de uso",
+        language: "Idioma",
+        changeLanguage: "Cambiar idioma",
     },
     announcement: {
         text: "Nuevo: ahora puedes convertir fotos HEIC de tu iPhone a JPG en segundos.",
         cta: "Probar ahora",
-        href: "/heic-a-jpg",
         dismiss: "Cerrar anuncio",
     },
     privacy: {
@@ -112,6 +119,7 @@ export const ui = {
         breadcrumbHome: "Inicio",
         open: "Abrir",
         siblings: "Otras opciones",
+        breadcrumb: "Migas de pan",
     },
     downloadAd: {
         title: "¡Tus imágenes están listas!",
@@ -128,11 +136,24 @@ export const ui = {
         madeWith: "Hecho con cariño en México. Tus imágenes se procesan solo en tu dispositivo.",
     },
     notFound: {
+        code: "Error 404",
         title: "Página no encontrada | Dorfic",
         description: "La página que buscas no existe. Vuelve al inicio para usar las herramientas de imagen gratis de Dorfic.",
         heading: "Esta página se nos perdió",
         body: "Puede que el enlace esté mal escrito o que la página ya no exista. Tus herramientas siguen aquí.",
         cta: "Volver al inicio",
+    },
+    contactPage: {
+        emailLabel: "Correo electrónico",
+    },
+    seo: {
+        ogImageAlt: "Dorfic: herramientas de imagen gratis en tu navegador",
+        alternateName: "Dorfic herramientas de imagen",
+        howToTool: "Navegador web (celular o computadora)",
+        appSubCategory: "Editor de imágenes",
+        features: ["Procesamiento 100% en el navegador", "Procesamiento en lote", "Descarga en ZIP", "Sin registro", "Sin marcas de agua"],
+        currency: "MXN",
+        titleFree: "{name} gratis | Dorfic",
     },
     legalUpdated: "Última actualización: {date}",
 };

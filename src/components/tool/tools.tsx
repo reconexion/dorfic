@@ -134,7 +134,9 @@ const CompressTool = ({ def }: { def: Extract<ToolDefinition, { type: "compress"
                         <div className="flex items-center justify-between gap-3">
                             <p className="text-sm text-secondary">
                                 {ui.options.presetSummary}{" "}
-                                <span className="rounded-full bg-brand-solid px-2.5 py-1 text-sm font-bold text-white">{targetKB} KB</span>
+                                <span className="rounded-full bg-brand-solid px-2.5 py-1 text-sm font-bold text-white">
+                                    {targetKB} {ui.units.kb}
+                                </span>
                             </p>
                             <button
                                 type="button"

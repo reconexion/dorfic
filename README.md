@@ -41,21 +41,23 @@ El build:
 1. Sube el proyecto a un repositorio de GitHub o GitLab.
 2. En el panel de Cloudflare: **Workers & Pages → Create → Pages → Connect to Git** y elige el repositorio.
 3. Configuración de build:
-   - **Framework preset:** `None`
-   - **Build command:** `npm run build`
-   - **Build output directory:** `build/client`
-   - **Root directory:** `/` (déjalo vacío)
+    - **Framework preset:** `None`
+    - **Build command:** `npm run build`
+    - **Build output directory:** `build/client`
+    - **Root directory:** `/` (déjalo vacío)
 4. En **Environment variables** (Production y Preview) agrega:
-   - `SITE_URL` = `https://tu-dominio.com` (cuando lo compres; mientras tanto `https://<proyecto>.pages.dev`)
-   - `NODE_VERSION` = `22`
-   - `VITE_CONTACT_EMAIL` = tu correo público
-   - `VITE_CF_BEACON_TOKEN` = (opcional) token de Web Analytics
+    - `SITE_URL` = `https://tu-dominio.com` (cuando lo compres; mientras tanto `https://<proyecto>.pages.dev`)
+    - `NODE_VERSION` = `22`
+    - `VITE_CONTACT_EMAIL` = tu correo público
+    - `VITE_CF_BEACON_TOKEN` = (opcional) token de Web Analytics
 5. **Save and Deploy**.
 6. Cuando compres el dominio: **Custom domains → Set up a custom domain**, actualiza `SITE_URL` y vuelve a desplegar (así se regeneran canónicas y sitemap).
 
 También puedes subirlo sin Git: `npm run build && npx wrangler pages deploy build/client --project-name dorfic`.
 
-> Cloudflare Pages sirve `heic-a-jpg.html` en la URL `/heic-a-jpg` y usa `404.html` para las rutas que no existen. No hace falta ningún archivo `_redirects`.
+> Cloudflare Pages sirve `heic-a-jpg.html` en la URL `/heic-a-jpg` y usa el `404.html` más cercano (`/en/404.html`, `/pt/404.html`…) para las rutas que no existen. No hace falta ningún archivo `_redirects`.
+>
+> La carpeta `functions/` se despliega sola como **Pages Function** (redirección por idioma, ver abajo). `public/_routes.json` limita la función a las URLs en español para no gastar invocaciones en assets.
 
 ## Analítica (Cloudflare Web Analytics, sin cookies)
 
@@ -67,15 +69,15 @@ En Cloudflare: **Analytics & Logs → Web Analytics → Add a site**, copia el t
 - Distribución por página de herramienta: debajo de la herramienta, dos dentro del contenido (separados por texto), uno antes de las herramientas relacionadas y uno fijo en la barra lateral de escritorio. En el inicio: uno bajo el hero y otro tras el directorio.
 - Opcional: en AdSense puedes activar **Auto ads → Anchor (anuncio de anclaje)** para móvil; se descarta con un toque y no tapa la herramienta.
 - Cuando AdSense te apruebe:
-  1. Pega el script de AdSense donde indica el comentario en `src/root.tsx` (`<head>`).
-  2. Reemplaza el `<div data-ad-slot>` de `ad-slot.tsx` por el bloque `<ins class="adsbygoogle">` (instrucciones en el comentario del archivo).
-  3. Crea `public/ads.txt` con la línea que te da AdSense.
+    1. Pega el script de AdSense donde indica el comentario en `src/root.tsx` (`<head>`).
+    2. Reemplaza el `<div data-ad-slot>` de `ad-slot.tsx` por el bloque `<ins class="adsbygoogle">` (instrucciones en el comentario del archivo).
+    3. Crea `public/ads.txt` con la línea que te da AdSense.
 
 ## SEO
 
 Cada página se prerenderiza con:
 
-- `<title>` y meta description únicos, canónica, `hreflang` (es-MX, es, x-default) y `robots` con `max-image-preview:large`.
+- `<title>` y meta description únicos, canónica, `hreflang` de los 5 idiomas + `x-default` (también dentro de `sitemap.xml`) y `robots` con `max-image-preview:large`.
 - Open Graph y Twitter Card con **imagen propia por herramienta** (`public/og/<slug>.png`, generadas con `npm run icons`).
 - JSON-LD: `Organization`, `WebSite`, `WebPage` (con `dateModified`), `SoftwareApplication`, `FAQPage`, `HowTo` (a partir de los pasos) y `BreadcrumbList`; el inicio incluye `ItemList` con todas las herramientas.
 - 19 páginas de herramienta con 600 a 800 palabras originales cada una, pensadas para búsquedas concretas ("comprimir imagen a 30 kb", "heic a png", "comprimir png"…).
@@ -96,11 +98,14 @@ Cada página se prerenderiza con:
 src/
   root.tsx                 Layout HTML, header/footer, Motion, PWA, analítica
   routes.ts                Rutas (React Router framework)
-  routes/                  Una ruta por página (tools/*.tsx para cada herramienta)
-  config/paths.ts          Lista única de rutas (prerender + sitemap)
+  routes/                  tool.tsx (todas las herramientas), home, páginas legales y 404
+  config/paths.ts          Idiomas, URLs traducidas, detección de idioma, rutas de prerender/sitemap
   config/tools.ts          Comportamiento de cada herramienta (formatos, presets)
   config/site.ts           SITE_URL, correo, límites
-  i18n/                    Textos separados por idioma (es/ui.ts, es/tools/*, es/pages/*)
+  i18n/<idioma>/            Textos por idioma: ui.ts, tool-cards.ts, search.ts, pages/*, tools/*
+  i18n/content.server.ts   Carga el contenido largo en el prerender (no va en el JS)
+  lib/locale-preference.ts Cookie del idioma y redirección de respaldo en el navegador
+functions/_middleware.ts   Cloudflare Pages Function: redirige a cada visitante a su idioma
   lib/image/               Motor de imágenes: worker, pool, decodificación y compresión
   lib/seo.ts               Meta tags, Open Graph y JSON-LD
   components/tool/         Componente base de herramienta (zona de carga, lista, progreso, ZIP)
@@ -111,18 +116,31 @@ scripts/generate-icons.mjs Genera favicon, íconos PWA, logo y og-image (npm run
 
 ### Agregar una herramienta
 
-1. Agrega el slug en `src/config/paths.ts` y su comportamiento en `src/config/tools.ts`.
-2. Crea el contenido en `src/i18n/es/tools/<slug>.ts` y la tarjeta en `src/i18n/es/tool-cards.ts`.
-3. Crea `src/routes/tools/<slug>.tsx` (copia cualquiera de los existentes).
+1. Agrega el slug en `TOOL_SLUGS` (`src/config/paths.ts`) y su comportamiento en `src/config/tools.ts`. Si no es una conversión ni un tamaño en KB, agrega su URL traducida en `TOOL_URL_RULES[...].fixed`.
+2. Crea el contenido en `src/i18n/<idioma>/tools/<slug>.ts` y la tarjeta en `src/i18n/<idioma>/tool-cards.ts` **para cada idioma** (TypeScript avisa si falta una tarjeta).
+3. No hace falta crear archivos de ruta: `src/routes.ts` genera las URLs de todos los idiomas.
 
-### Agregar idiomas (/pt, /en)
+## Idiomas
 
-Los textos ya viven fuera de los componentes. Para agregar portugués:
+| Idioma             | URL         | Ejemplo             |
+| ------------------ | ----------- | ------------------- |
+| Español (México)   | sin prefijo | `/heic-a-jpg`       |
+| Inglés             | `/en`       | `/en/heic-to-jpg`   |
+| Portugués (Brasil) | `/pt`       | `/pt/heic-para-jpg` |
+| Francés            | `/fr`       | `/fr/heic-en-jpg`   |
+| Alemán             | `/de`       | `/de/heic-in-jpg`   |
 
-1. Copia `src/i18n/es` a `src/i18n/pt` y traduce.
-2. Registra el diccionario en `src/i18n/index.ts` y agrega `"pt"` a `LOCALES` en `src/config/paths.ts`.
-3. En `src/routes.ts` agrega las rutas con prefijo (`route("pt/…", …)`) y provee `LocaleContext` con el idioma según la URL.
-4. Agrega las rutas `/pt/...` a `INDEXABLE_PATHS` para prerender y sitemap, y etiquetas `hreflang` en `lib/seo.ts`.
+- **Cada idioma tiene sus propias páginas prerenderizadas** (título, contenido, JSON-LD, 404) y se enlazan entre sí con `hreflang`. El contenido largo se carga en el `loader` de cada ruta durante el build, así que no engorda el JavaScript; solo los textos cortos de interfaz (`ui.ts`, `tool-cards.ts`, `search.ts`) van en el bundle.
+- **Idioma predeterminado:** la primera vez que alguien entra por una URL en español, se le manda a su idioma según, en este orden: la elección que ya hizo (cookie `dorfic_lang`) → el idioma de su navegador → su país. En Cloudflare lo hace `functions/_middleware.ts` antes de servir la página (sin parpadeo, usa `Accept-Language` y el país de la IP). En desarrollo o en otro hosting lo hace el navegador (`src/lib/locale-preference.ts`, con la zona horaria como aproximación del país).
+- **Nunca se redirige** a buscadores ni a quien entra directo a una URL con prefijo (`/en/...`): Google indexa todas las versiones.
+- **Selector de idioma** en el header y en el footer; lleva a la misma página en el otro idioma y guarda la elección.
+- Las imágenes Open Graph (`public/og/*.png`) son las mismas para todos los idiomas.
+
+### Agregar otro idioma
+
+1. Agrega el código en `LOCALES`, `LOCALE_TAGS`, `LOCALE_NAMES` y sus reglas de URL en `TOOL_URL_RULES` / `PAGE_URLS` (`src/config/paths.ts`). Si aplica, agrega sus países en `COUNTRY_LOCALE`.
+2. Copia `src/i18n/en` a `src/i18n/<idioma>`, traduce y regístralo en `src/i18n/index.ts`.
+3. Agrega `"/<idioma>/*"` a `exclude` en `public/_routes.json`.
 
 ## Diseño e interacción
 
@@ -142,4 +160,5 @@ Los textos ya viven fuera de los componentes. Para agregar portugués:
 - **Fuente:** Inter variable recortada a los caracteres del español (`src/assets/fonts/inter-es-wght.woff2`, ≈34 KB) y precargada. Para regenerarla: `pyftsubset Inter.woff2 --unicodes="U+0020-007E,U+00A0-00FF,U+2013-2014,U+2018-201E,U+2022,U+2026,U+20AC,U+2192,U+2212" --flavor=woff2 --output-file=src/assets/fonts/inter-es-wght.woff2` (requiere `pip install fonttools brotli`).
 - **Prerender en orden:** `src/entry.server.tsx` siempre espera `onAllReady` y desactiva `progressiveChunkSize`, así el HTML sale completo y en orden (sin bloques de `<Suspense>` al final).
 - **Sin modo oscuro:** se eliminaron las variables `.dark-mode` del tema, se quitó el ThemeProvider y se declara `color-scheme: only light` (también evita el oscurecimiento automático de Chrome en Android).
+
 # dorfic

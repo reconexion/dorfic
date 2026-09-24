@@ -5,11 +5,10 @@ import { useNavigate } from "react-router";
 import { Dropzone } from "@/components/tool/dropzone";
 import type { ToolSlug } from "@/config/paths";
 import { TOOLS, acceptAttr, formatsLabel } from "@/config/tools";
-import { fmt, useToolCards } from "@/i18n";
-import { quickStartUi } from "@/i18n/es/search";
+import { fmt, useLocalePath, useSearchDictionary, useToolCards, useUi } from "@/i18n";
 import { formatBytes } from "@/lib/download";
-import { type InputKind, detectKind } from "@/lib/image/formats";
 import { setPendingFiles } from "@/lib/handoff";
+import { type InputKind, detectKind } from "@/lib/image/formats";
 import { cx } from "@/utils/cx";
 
 const ALL_KINDS: InputKind[] = ["jpeg", "png", "webp", "heic"];
@@ -35,7 +34,10 @@ const suggest = (kinds: Set<InputKind>, totalBytes: number, count: number): Tool
  * y le mostramos las acciones más útiles. Al elegir, la herramienta abre con la imagen ya cargada.
  */
 export const QuickStart = () => {
+    const ui = useUi();
     const cards = useToolCards();
+    const { quickStart: quickStartUi } = useSearchDictionary();
+    const to = useLocalePath();
     const navigate = useNavigate();
     const [files, setFiles] = useState<{ file: File; kind: InputKind }[]>([]);
     const [options, setOptions] = useState<ToolSlug[]>([]);
@@ -64,7 +66,7 @@ export const QuickStart = () => {
     const choose = (slug: ToolSlug) => {
         // Solo pasamos las imágenes que esa herramienta acepta.
         setPendingFiles(files.filter((f) => TOOLS[slug].from.includes(f.kind)).map((f) => f.file));
-        navigate(`/${slug}`);
+        navigate(to({ type: "tool", id: slug }));
     };
 
     const reset = () => {
@@ -80,11 +82,22 @@ export const QuickStart = () => {
         <div className="mx-auto w-full max-w-3xl">
             <AnimatePresence mode="wait" initial={false}>
                 {files.length === 0 ? (
-                    <m.div key="drop" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.22 }}>
+                    <m.div
+                        key="drop"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.22 }}
+                    >
                         <p className="mb-3 text-center text-sm font-semibold text-secondary">{quickStartUi.title}</p>
                         <Dropzone accept={acceptAttr(ALL_KINDS)} formats={formatsLabel(ALL_KINDS)} onFiles={(f) => void onFiles(f)} />
                         {error && (
-                            <m.p role="alert" initial={{ opacity: 0 }} animate={{ opacity: 1, x: [0, -6, 6, -3, 3, 0] }} className="mt-3 text-center text-sm text-error-primary">
+                            <m.p
+                                role="alert"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1, x: [0, -6, 6, -3, 3, 0] }}
+                                className="mt-3 text-center text-sm text-error-primary"
+                            >
                                 {quickStartUi.unsupported}
                             </m.p>
                         )}
@@ -108,9 +121,13 @@ export const QuickStart = () => {
                                 {preview && <img src={preview} alt="" className="size-full object-cover" />}
                             </m.div>
                             <div className="min-w-0 flex-1">
-                                <p className="truncate font-semibold text-primary">{files.length === 1 ? files[0].file.name : fmt(quickStartUi.detected, { n: files.length, size: formatBytes(totalSize) })}</p>
+                                <p className="truncate font-semibold text-primary">
+                                    {files.length === 1
+                                        ? files[0].file.name
+                                        : fmt(quickStartUi.detected, { n: files.length, size: formatBytes(totalSize, ui) })}
+                                </p>
                                 <p className="text-sm text-tertiary">
-                                    {formatBytes(totalSize)} · {formatsLabel(kindsFound)}
+                                    {formatBytes(totalSize, ui)} · {formatsLabel(kindsFound)}
                                 </p>
                             </div>
                             <button
@@ -129,7 +146,12 @@ export const QuickStart = () => {
                                 const Icon = TOOLS[slug].icon;
                                 const first = i === 0;
                                 return (
-                                    <m.li key={slug} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 * i, duration: 0.25 }}>
+                                    <m.li
+                                        key={slug}
+                                        initial={{ opacity: 0, y: 12 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.06 * i, duration: 0.25 }}
+                                    >
                                         <button
                                             type="button"
                                             onClick={() => choose(slug)}
@@ -157,7 +179,10 @@ export const QuickStart = () => {
                                                     </span>
                                                 )}
                                             </span>
-                                            <ArrowRight aria-hidden className="ml-auto size-5 shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
+                                            <ArrowRight
+                                                aria-hidden
+                                                className="ml-auto size-5 shrink-0 transition-transform duration-200 group-hover:translate-x-1"
+                                            />
                                         </button>
                                     </m.li>
                                 );

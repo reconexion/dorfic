@@ -34,8 +34,18 @@ export const downloadZip = async (files: { name: string; blob: Blob }[], zipName
     downloadBlob(blob, zipName);
 };
 
-export const formatBytes = (bytes: number) => {
-    if (bytes < 1024) return `${Math.round(bytes)} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(bytes < 10 * 1024 ? 1 : 0)} KB`;
-    return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+export interface ByteFormat {
+    /** Etiqueta BCP 47 para el separador decimal (1.5 / 1,5). */
+    locale: string;
+    units: { b: string; kb: string; mb: string };
+}
+
+const DEFAULT_BYTE_FORMAT: ByteFormat = { locale: "es-MX", units: { b: "B", kb: "KB", mb: "MB" } };
+
+/** "1.2 MB", "340 KB"… con las unidades y el separador decimal del idioma (pasa `ui`). */
+export const formatBytes = (bytes: number, { locale, units }: ByteFormat = DEFAULT_BYTE_FORMAT) => {
+    const num = (n: number, digits: number) => n.toLocaleString(locale, { minimumFractionDigits: digits, maximumFractionDigits: digits, useGrouping: false });
+    if (bytes < 1024) return `${Math.round(bytes)} ${units.b}`;
+    if (bytes < 1024 * 1024) return `${num(bytes / 1024, bytes < 10 * 1024 ? 1 : 0)} ${units.kb}`;
+    return `${num(bytes / 1024 / 1024, 1)} ${units.mb}`;
 };

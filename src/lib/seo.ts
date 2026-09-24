@@ -1,15 +1,18 @@
 import type { MetaDescriptor } from "react-router";
+import { DEFAULT_LOCALE, LOCALES, LOCALE_TAGS, type Locale, type Target, localizePath } from "@/config/paths";
 import { OG_IMAGE, SITE_NAME, SITE_URL, absoluteUrl } from "@/config/site";
+import { fmt, getUi } from "@/i18n";
 import type { ContentSection, Faq } from "@/i18n/types";
 
 interface MetaOptions {
     /** Título completo tal como va en <title>. */
     title: string;
     description: string;
-    path: string;
+    /** Qué página es: con esto se arman la canónica y los hreflang de todos los idiomas. */
+    target: Target;
+    locale: Locale;
     noindex?: boolean;
     jsonLd?: object[];
-    locale?: string;
     /** Imagen Open Graph propia (ruta pública, p. ej. "/og/heic-a-jpg.png"). */
     image?: string;
 }
@@ -27,8 +30,17 @@ export const organizationLd = {
 };
 
 /** Genera title, description, canónica, Open Graph, Twitter y JSON-LD para el HTML prerenderizado. */
-export const buildMeta = ({ title, description, path, noindex, jsonLd = [], locale = "es_MX", image }: MetaOptions): MetaDescriptor[] => {
-    const url = absoluteUrl(path);
+export const buildMeta = ({ title, description, target, locale, noindex, jsonLd = [], image }: MetaOptions): MetaDescriptor[] => {
+    const url = absoluteUrl(localizePath(locale, target));
+    const ui = getUi(locale);
+    const lang = LOCALE_TAGS[locale];
+    // La misma página en cada idioma; x-default es la versión sin prefijo (redirige según el idioma del visitante).
+    const alternates: MetaDescriptor[] = noindex
+        ? []
+        : [
+              ...LOCALES.map((l) => ({ tagName: "link", rel: "alternate", hrefLang: LOCALE_TAGS[l], href: absoluteUrl(localizePath(l, target)) })),
+              { tagName: "link", rel: "alternate", hrefLang: "x-default", href: absoluteUrl(localizePath(DEFAULT_LOCALE, target)) },
+          ];
     const ogImage = image ? `${SITE_URL}${image}` : OG_IMAGE;
     const meta: MetaDescriptor[] = [
         { title },
@@ -38,13 +50,11 @@ export const buildMeta = ({ title, description, path, noindex, jsonLd = [], loca
             content: noindex ? "noindex, follow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
         },
         { tagName: "link", rel: "canonical", href: url },
-        // Idiomas: por ahora solo español. Al agregar /pt y /en, añade aquí sus alternates.
-        { tagName: "link", rel: "alternate", hrefLang: "es-MX", href: url },
-        { tagName: "link", rel: "alternate", hrefLang: "es", href: url },
-        { tagName: "link", rel: "alternate", hrefLang: "x-default", href: url },
+        ...alternates,
         { property: "og:type", content: "website" },
         { property: "og:site_name", content: SITE_NAME },
-        { property: "og:locale", content: locale },
+        { property: "og:locale", content: lang.replace("-", "_") },
+        ...LOCALES.filter((l) => l !== locale).map((l) => ({ property: "og:locale:alternate", content: LOCALE_TAGS[l].replace("-", "_") })),
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: url },
@@ -52,13 +62,13 @@ export const buildMeta = ({ title, description, path, noindex, jsonLd = [], loca
         { property: "og:image:type", content: "image/png" },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
-        { property: "og:image:alt", content: "Dorfic: herramientas de imagen gratis en tu navegador" },
+        { property: "og:image:alt", content: ui.seo.ogImageAlt },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
         { name: "twitter:image", content: ogImage },
         { "script:ld+json": organizationLd },
-        { "script:ld+json": websiteLd },
+        { "script:ld+json": websiteLd(locale) },
         {
             "script:ld+json": {
                 "@context": "https://schema.org",
@@ -67,7 +77,7 @@ export const buildMeta = ({ title, description, path, noindex, jsonLd = [], loca
                 url,
                 name: title,
                 description,
-                inLanguage: "es-MX",
+                inLanguage: lang,
                 isPartOf: { "@id": `${SITE_URL}/#website` },
                 publisher: { "@id": `${SITE_URL}/#organization` },
                 primaryImageOfPage: { "@type": "ImageObject", url: ogImage, width: 1200, height: 630 },
@@ -79,36 +89,37 @@ export const buildMeta = ({ title, description, path, noindex, jsonLd = [], loca
     return meta;
 };
 
-export const websiteLd = {
+export const websiteLd = (locale: Locale) => ({
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": `${SITE_URL}/#website`,
     name: SITE_NAME,
-    alternateName: ["Dorfic herramientas de imagen", "dorfic.com"],
+    alternateName: [getUi(locale).seo.alternateName, "dorfic.com"],
     url: `${SITE_URL}/`,
-    inLanguage: "es-MX",
+    inLanguage: LOCALES.map((l) => LOCALE_TAGS[l]),
     publisher: { "@id": `${SITE_URL}/#organization` },
-};
+});
 
 /** HowTo a partir de la sección con pasos numerados. */
-export const howToLd = ({ name, sections, path }: { name: string; sections: ContentSection[]; path: string }) => {
+export const howToLd = ({ name, sections, path, locale }: { name: string; sections: ContentSection[]; path: string; locale: Locale }) => {
     const section = sections.find((s) => s.steps?.length);
     if (!section) return null;
+    const ui = getUi(locale);
     return {
         "@context": "https://schema.org",
         "@type": "HowTo",
         name: section.heading,
         description: name,
-        inLanguage: "es-MX",
+        inLanguage: LOCALE_TAGS[locale],
         totalTime: "PT1M",
-        estimatedCost: { "@type": "MonetaryAmount", currency: "MXN", value: "0" },
-        tool: [{ "@type": "HowToTool", name: "Navegador web (celular o computadora)" }],
+        estimatedCost: { "@type": "MonetaryAmount", currency: ui.seo.currency, value: "0" },
+        tool: [{ "@type": "HowToTool", name: ui.seo.howToTool }],
         step: section.steps!.map((text, i) => ({
             "@type": "HowToStep",
             position: i + 1,
             name: text.split(/[.:]/)[0].slice(0, 90),
             text,
-            url: `${absoluteUrl(path)}#paso-${i + 1}`,
+            url: `${absoluteUrl(path)}#${STEP_ANCHOR}${i + 1}`,
         })),
     };
 };
@@ -119,8 +130,11 @@ export const itemListLd = (items: { name: string; path: string }[]) => ({
     itemListElement: items.map((item, i) => ({ "@type": "ListItem", position: i + 1, name: item.name, url: absoluteUrl(item.path) })),
 });
 
-/** "[Nombre] gratis | Dorfic" */
-export const toolTitle = (name: string) => `${name} gratis | ${SITE_NAME}`;
+/** Ancla de cada paso del HowTo (content-sections.tsx usa la misma). */
+export const STEP_ANCHOR = "paso-";
+
+/** "[Nombre] gratis | Dorfic" en el idioma de la página. */
+export const toolTitle = (name: string, locale: Locale) => fmt(getUi(locale).seo.titleFree, { name });
 
 export const faqLd = (faqs: Faq[]) => ({
     "@context": "https://schema.org",
@@ -132,21 +146,21 @@ export const faqLd = (faqs: Faq[]) => ({
     })),
 });
 
-export const softwareLd = ({ name, description, path }: { name: string; description: string; path: string }) => ({
+export const softwareLd = ({ name, description, path, image, locale }: { name: string; description: string; path: string; image: string; locale: Locale }) => ({
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: `${name} – ${SITE_NAME}`,
     description,
     url: absoluteUrl(path),
-    image: `${SITE_URL}/og${path}.png`,
+    image: `${SITE_URL}${image}`,
     applicationCategory: "MultimediaApplication",
-    applicationSubCategory: "Editor de imágenes",
-    featureList: ["Procesamiento 100% en el navegador", "Procesamiento en lote", "Descarga en ZIP", "Sin registro", "Sin marcas de agua"],
+    applicationSubCategory: getUi(locale).seo.appSubCategory,
+    featureList: getUi(locale).seo.features,
     operatingSystem: "Web, Android, iOS, Windows, macOS",
     browserRequirements: "Requiere JavaScript y un navegador moderno",
     isAccessibleForFree: true,
-    inLanguage: "es-MX",
-    offers: { "@type": "Offer", price: "0", priceCurrency: "MXN" },
+    inLanguage: LOCALE_TAGS[locale],
+    offers: { "@type": "Offer", price: "0", priceCurrency: getUi(locale).seo.currency },
     publisher: { "@id": `${SITE_URL}/#organization` },
 });
 

@@ -6,29 +6,42 @@ import { FoxMascot } from "@/components/brand/fox-mascot";
 import { HeroBackground } from "@/components/content/hero-background";
 import { ToolDirectory } from "@/components/content/tool-directory";
 import { SearchBox } from "@/components/search/search-box";
-import { TOOL_SLUGS } from "@/config/paths";
-import { getToolCards, useUi } from "@/i18n";
-import { home } from "@/i18n/es/pages/home";
-import { intents } from "@/i18n/es/search";
+import { TOOL_SLUGS, localizePath, resolvePath } from "@/config/paths";
+import { getToolCards, useLocalePath, useSearchDictionary, useUi } from "@/i18n";
+import { loadHomeContent } from "@/i18n/content.server";
+import type { HomeContent } from "@/i18n/types";
 import { buildMeta, itemListLd } from "@/lib/seo";
 
 // La zona de carga inteligente (y su código) se hidrata aparte; el HTML ya viene prerenderizado.
 const QuickStart = lazy(() => import("@/components/search/quick-start").then((mod) => ({ default: mod.QuickStart })));
 
-export const meta = () => {
-    const cards = getToolCards();
+interface LoaderData {
+    home: HomeContent;
+}
+
+export async function loader({ request }: { request: Request }): Promise<LoaderData> {
+    return { home: await loadHomeContent(resolvePath(new URL(request.url).pathname).locale) };
+}
+
+export const meta = ({ loaderData, location }: { loaderData?: LoaderData; location: { pathname: string } }) => {
+    if (!loaderData) return [];
+    const { locale } = resolvePath(location.pathname);
+    const cards = getToolCards(locale);
     return buildMeta({
-        title: home.title,
-        description: home.metaDescription,
-        path: "/",
-        jsonLd: [itemListLd(TOOL_SLUGS.map((slug) => ({ name: cards[slug].name, path: `/${slug}` })))],
+        title: loaderData.home.title,
+        description: loaderData.home.metaDescription,
+        target: { type: "home" },
+        locale,
+        jsonLd: [itemListLd(TOOL_SLUGS.map((id) => ({ name: cards[id].name, path: localizePath(locale, { type: "tool", id }) })))],
     });
 };
 
 const rise = (ms: number) => ({ ["--rise-delay" as string]: `${ms}ms` });
 
-export default function Home() {
+export default function Home({ loaderData: { home } }: { loaderData: LoaderData }) {
     const ui = useUi();
+    const { intents } = useSearchDictionary();
+    const to = useLocalePath();
     return (
         <>
             <section className="relative isolate overflow-hidden">
@@ -52,7 +65,7 @@ export default function Home() {
                             {intents.map((intent) => (
                                 <li key={intent.label} className="shrink-0 snap-start">
                                     <Link
-                                        to={`/${intent.slug}`}
+                                        to={to({ type: "tool", id: intent.slug })}
                                         className="inline-flex items-center rounded-full bg-brand-50 px-3.5 py-2 text-sm font-semibold whitespace-nowrap text-brand-secondary shadow-xs ring-1 ring-brand-200 transition duration-200 hover:bg-brand-solid hover:text-white hover:shadow-[0_8px_18px_-8px_rgb(255_106_0/0.8)] hover:ring-transparent motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-[0.97]"
                                     >
                                         {intent.label}

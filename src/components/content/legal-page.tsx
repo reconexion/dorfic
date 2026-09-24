@@ -1,11 +1,26 @@
 import type { ReactNode } from "react";
 import { ContentSections } from "@/components/content/content-sections";
+import { type PageSlug, resolvePath } from "@/config/paths";
 import { fmt, useUi } from "@/i18n";
 import type { LegalPageContent } from "@/i18n/types";
 import { buildMeta } from "@/lib/seo";
 
-export const legalMeta = (content: LegalPageContent, path: string) =>
-    buildMeta({ title: `${content.title} | Dorfic`, description: content.metaDescription, path });
+export interface LegalLoaderData {
+    content: LegalPageContent;
+}
+
+/** meta() común de las páginas informativas: el idioma sale de la URL. */
+export const legalMeta =
+    (id: PageSlug) =>
+    ({ loaderData, location }: { loaderData?: LegalLoaderData; location: { pathname: string } }) =>
+        loaderData
+            ? buildMeta({
+                  title: `${loaderData.content.title} | Dorfic`,
+                  description: loaderData.content.metaDescription,
+                  target: { type: "page", id },
+                  locale: resolvePath(location.pathname).locale,
+              })
+            : [];
 
 export const LegalPage = ({ content, children }: { content: LegalPageContent; children?: ReactNode }) => {
     const ui = useUi();

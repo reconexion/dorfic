@@ -76,16 +76,16 @@ export const FileCard = ({ item, formats, onRemove, onDownload }: FileCardProps)
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-tertiary">
                         <CheckDraw className="size-4.5" />
                         <span>
-                            {formatBytes(file.size)} → <span className="font-semibold text-primary">{formatBytes(result.blob.size)}</span>
+                            {formatBytes(file.size, ui)} → <span className="font-semibold text-primary">{formatBytes(result.blob.size, ui)}</span>
                         </span>
                         {result.unchanged ? (
                             <span className="text-xs text-quaternary">{ui.files.unchanged}</span>
                         ) : saved > 0 ? (
                             <span className="rounded-full bg-success-primary px-2 py-0.5 text-xs font-semibold text-success-primary">
                                 <AnimatedNumber value={percent} format={(n) => fmt(ui.files.savedPercent, { percent: Math.round(n) })} />
-                                <span className="sr-only">{fmt(ui.files.saved, { kb: formatBytes(saved) })}</span>
+                                <span className="sr-only">{fmt(ui.files.saved, { kb: formatBytes(saved, ui) })}</span>
                                 <span aria-hidden className="ml-1 hidden font-medium sm:inline">
-                                    · <AnimatedNumber value={saved} format={(n) => formatBytes(n)} />
+                                    · <AnimatedNumber value={saved} format={(n) => formatBytes(n, ui)} />
                                 </span>
                             </span>
                         ) : (

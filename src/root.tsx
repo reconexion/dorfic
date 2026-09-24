@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect } from "react";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useRouteError } from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useLocation, useNavigate, useRouteError } from "react-router";
 import type { LinksFunction } from "react-router";
 import interLatin from "@/assets/fonts/inter-es-wght.woff2?url";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -7,9 +7,10 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { openHydrationGate } from "@/components/motion/hydration-gate";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { PageTransition } from "@/components/motion/page-transition";
-import { DEFAULT_LOCALE } from "@/config/paths";
+import { LOCALE_TAGS, localeFromPath, localizePath } from "@/config/paths";
 import { ADSENSE_CLIENT, BING_SITE_VERIFICATION, CF_BEACON_TOKEN, GOOGLE_SITE_VERIFICATION, THEME_COLOR } from "@/config/site";
-import { LocaleContext, getUi } from "@/i18n";
+import { LocaleContext, getUi, useLocale } from "@/i18n";
+import { preferredLocaleRedirect } from "@/lib/locale-preference";
 import { RouteProvider } from "@/providers/router-provider";
 import stylesheet from "@/styles/globals.css?url";
 
@@ -24,8 +25,9 @@ export const links: LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: ReactNode }) {
+    const locale = localeFromPath(useLocation().pathname);
     return (
-        <html lang="es-MX" className="bg-page" style={{ colorScheme: "only light" }}>
+        <html lang={LOCALE_TAGS[locale]} className="bg-page" style={{ colorScheme: "only light" }}>
             <head>
                 <meta charSet="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -66,8 +68,22 @@ const useServiceWorker = () => {
     }, []);
 };
 
+/**
+ * Respaldo en el navegador de la redirección por idioma (functions/_middleware.ts la hace en Cloudflare
+ * sin parpadeo). Sirve en desarrollo y en cualquier hosting: solo actúa en la primera visita.
+ */
+const useLocaleRedirect = () => {
+    const { pathname, search, hash } = useLocation();
+    const navigate = useNavigate();
+    useEffect(() => {
+        const to = preferredLocaleRedirect(pathname);
+        if (to) navigate(to + search + hash, { replace: true });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+};
+
 const Shell = ({ children }: { children: ReactNode }) => (
-    <LocaleContext.Provider value={DEFAULT_LOCALE}>
+    <LocaleContext.Provider value={localeFromPath(useLocation().pathname)}>
         <MotionProvider>
             <RouteProvider>
                 {/* grid-wrapper: fondo #f8fafc + cuadrícula que se desvanece desde la parte superior */}
@@ -86,6 +102,7 @@ const Shell = ({ children }: { children: ReactNode }) => (
 
 export default function App() {
     useServiceWorker();
+    useLocaleRedirect();
     useEffect(() => {
         // Tras la primera hidratación, las navegaciones ya no difieren nada.
         const t = setTimeout(openHydrationGate, 0);
@@ -101,18 +118,28 @@ export default function App() {
 }
 
 export function ErrorBoundary() {
-    const error = useRouteError();
-    const ui = getUi();
-    const is404 = isRouteErrorResponse(error) && error.status === 404;
     return (
         <Shell>
-            <section className="mx-auto max-w-2xl px-4 py-24 text-center">
-                <h1 className="text-display-xs font-semibold text-primary">{is404 ? ui.notFound.heading : ui.errors.unknown}</h1>
-                <p className="mt-4 text-lg text-tertiary">{ui.notFound.body}</p>
-                <a href="/" className="mt-8 inline-flex rounded-lg bg-brand-solid px-4 py-2.5 font-semibold text-white hover:bg-brand-solid_hover">
-                    {ui.notFound.cta}
-                </a>
-            </section>
+            <ErrorContent />
         </Shell>
     );
 }
+
+const ErrorContent = () => {
+    const error = useRouteError();
+    const locale = useLocale();
+    const ui = getUi(locale);
+    const is404 = isRouteErrorResponse(error) && error.status === 404;
+    return (
+        <section className="mx-auto max-w-2xl px-4 py-24 text-center">
+            <h1 className="text-display-xs font-semibold text-primary">{is404 ? ui.notFound.heading : ui.errors.unknown}</h1>
+            <p className="mt-4 text-lg text-tertiary">{ui.notFound.body}</p>
+            <a
+                href={localizePath(locale, { type: "home" })}
+                className="mt-8 inline-flex rounded-lg bg-brand-solid px-4 py-2.5 font-semibold text-white hover:bg-brand-solid_hover"
+            >
+                {ui.notFound.cta}
+            </a>
+        </section>
+    );
+};

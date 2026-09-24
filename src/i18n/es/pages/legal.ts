@@ -4,7 +4,8 @@ const UPDATED = "23 de septiembre de 2026";
 
 export const acerca: LegalPageContent = {
     title: "Acerca de Dorfic",
-    metaDescription: "Conoce Dorfic: herramientas de imagen gratuitas que funcionan en tu navegador y protegen tu privacidad. Nuestra misión, cómo funcionamos y cómo nos financiamos.",
+    metaDescription:
+        "Conoce Dorfic: herramientas de imagen gratuitas que funcionan en tu navegador y protegen tu privacidad. Nuestra misión, cómo funcionamos y cómo nos financiamos.",
     h1: "Acerca de Dorfic",
     intro: "Dorfic es un conjunto de herramientas gratuitas para trabajar con imágenes: convertir formatos, comprimir y cambiar de tamaño. Lo hicimos pensando en las situaciones reales del día a día en México y Latinoamérica.",
     sections: [
@@ -66,7 +67,8 @@ export const contacto: LegalPageContent = {
 
 export const privacidad: LegalPageContent = {
     title: "Aviso de privacidad",
-    metaDescription: "Aviso de privacidad de Dorfic: tus imágenes se procesan en tu dispositivo y nunca se suben. Conoce qué datos técnicos se recopilan, el uso de cookies publicitarias y tus derechos.",
+    metaDescription:
+        "Aviso de privacidad de Dorfic: tus imágenes se procesan en tu dispositivo y nunca se suben. Conoce qué datos técnicos se recopilan, el uso de cookies publicitarias y tus derechos.",
     h1: "Aviso de privacidad",
     intro: "En Dorfic la privacidad es parte del diseño. Este aviso explica qué información se trata cuando usas el sitio, con qué fines y qué opciones tienes.",
     updated: UPDATED,
@@ -88,7 +90,7 @@ export const privacidad: LegalPageContent = {
             heading: "3. Datos técnicos y analítica",
             paragraphs: [
                 "Para saber cuántas personas visitan el sitio y qué páginas son más útiles usamos Cloudflare Web Analytics, un servicio de analítica que no utiliza cookies ni rastrea a las personas entre sitios. Recopila información agregada como la página visitada, el país aproximado, el tipo de dispositivo y el navegador.",
-                "Como cualquier sitio web, nuestro proveedor de alojamiento (Cloudflare) puede tratar datos técnicos como la dirección IP de forma temporal para entregar las páginas y proteger el sitio contra ataques.",
+                "Como cualquier sitio web, nuestro proveedor de alojamiento (Cloudflare) puede tratar datos técnicos como la dirección IP de forma temporal para entregar las páginas y proteger el sitio contra ataques. También usamos el idioma de tu navegador y tu país aproximado para mostrarte el sitio en tu idioma, y recordamos tu elección en una pequeña cookie funcional (dorfic_lang).",
             ],
         },
         {

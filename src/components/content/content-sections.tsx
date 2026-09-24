@@ -1,4 +1,5 @@
 import type { ContentSection } from "@/i18n/types";
+import { STEP_ANCHOR } from "@/lib/seo";
 
 /** Renderiza secciones de texto SEO (párrafos, pasos numerados y viñetas). */
 export const ContentSections = ({ sections }: { sections: ContentSection[] }) => (
@@ -14,7 +15,7 @@ export const ContentSections = ({ sections }: { sections: ContentSection[] }) =>
                 {section.steps && (
                     <ol className="mt-4 flex flex-col gap-3">
                         {section.steps.map((step, i) => (
-                            <li key={step.slice(0, 40)} id={`paso-${i + 1}`} className="flex scroll-mt-24 gap-3 text-lg text-tertiary">
+                            <li key={step.slice(0, 40)} id={`${STEP_ANCHOR}${i + 1}`} className="flex scroll-mt-24 gap-3 text-lg text-tertiary">
                                 <span
                                     aria-hidden
                                     className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-brand-primary text-sm font-semibold text-brand-secondary"

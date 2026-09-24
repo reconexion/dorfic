@@ -7,7 +7,8 @@ import { FaqList } from "@/components/content/faq";
 import { HeroBackground } from "@/components/content/hero-background";
 import { SiblingLinks } from "@/components/content/sibling-links";
 import { ToolGrid } from "@/components/content/tool-grid";
-import { useToolCards, useUi } from "@/i18n";
+import { type Locale, localizePath } from "@/config/paths";
+import { getUi, useLocalePath, useToolCards, useUi } from "@/i18n";
 import type { ToolContent } from "@/i18n/types";
 import { breadcrumbLd, buildMeta, faqLd, howToLd, softwareLd, toolTitle } from "@/lib/seo";
 
@@ -22,22 +23,28 @@ const ToolRunner = lazy(() => import("@/components/tool/tools").then((mod) => ({
 const ToolFallback = () => <div className="h-[290px] rounded-2xl border-2 border-dashed border-brand-300 md:h-[520px]" aria-hidden />;
 
 /** Meta tags + JSON-LD de una página de herramienta (se prerenderizan en el HTML). */
-export const toolMeta = (content: ToolContent, cardName: string) =>
-    buildMeta({
-        title: toolTitle(content.title),
+export const toolMeta = (content: ToolContent, cardName: string, locale: Locale) => {
+    const target = { type: "tool", id: content.slug } as const;
+    const path = localizePath(locale, target);
+    // Las imágenes Open Graph son las mismas para todos los idiomas.
+    const image = `/og/${content.slug}.png`;
+    return buildMeta({
+        title: toolTitle(content.title, locale),
         description: content.metaDescription,
-        path: `/${content.slug}`,
-        image: `/og/${content.slug}.png`,
+        target,
+        locale,
+        image,
         jsonLd: [
-            softwareLd({ name: cardName, description: content.metaDescription, path: `/${content.slug}` }),
+            softwareLd({ name: cardName, description: content.metaDescription, path, image, locale }),
             faqLd(content.faqs),
-            howToLd({ name: content.h1, sections: content.sections, path: `/${content.slug}` }),
+            howToLd({ name: content.h1, sections: content.sections, path, locale }),
             breadcrumbLd([
-                { name: "Inicio", path: "/" },
-                { name: cardName, path: `/${content.slug}` },
+                { name: getUi(locale).toolPage.breadcrumbHome, path: localizePath(locale, { type: "home" }) },
+                { name: cardName, path },
             ]),
         ].filter(Boolean) as object[],
     });
+};
 
 const rise = (ms: number) => ({ ["--rise-delay" as string]: `${ms}ms` });
 
@@ -48,6 +55,7 @@ const rise = (ms: number) => ({ ["--rise-delay" as string]: `${ms}ms` });
 export const ToolPage = ({ content }: { content: ToolContent }) => {
     const ui = useUi();
     const cards = useToolCards();
+    const to = useLocalePath();
     // Contenido en 3 partes con un anuncio entre cada una (sin cansar: siempre separados por texto útil).
     const third = Math.ceil(content.sections.length / 3);
     const parts = [content.sections.slice(0, third), content.sections.slice(third, third * 2), content.sections.slice(third * 2)];
@@ -58,10 +66,10 @@ export const ToolPage = ({ content }: { content: ToolContent }) => {
                 <HeroBackground compact />
                 <div className="mx-auto max-w-3xl px-4 pt-4 pb-10 md:px-8 md:pt-10 md:pb-12">
                     <header className="pb-4 text-center md:pb-7">
-                        <nav aria-label="Migas de pan" className="mb-2 hidden justify-center sm:flex">
+                        <nav aria-label={ui.toolPage.breadcrumb} className="mb-2 hidden justify-center sm:flex">
                             <ol className="flex items-center gap-1.5 text-sm text-tertiary">
                                 <li>
-                                    <Link to="/" className="hover:text-secondary">
+                                    <Link to={to({ type: "home" })} className="hover:text-secondary">
                                         {ui.toolPage.breadcrumbHome}
                                     </Link>
                                 </li>
@@ -93,7 +101,7 @@ export const ToolPage = ({ content }: { content: ToolContent }) => {
 
             <div className="mx-auto max-w-6xl px-4 md:px-8">
                 <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-12">
-                    <article className="min-w-0 max-w-3xl">
+                    <article className="max-w-3xl min-w-0">
                         <ContentSections sections={parts[0]} />
                         <AdSlot variant="in-content" className="my-10" />
                         <ContentSections sections={parts[1]} />

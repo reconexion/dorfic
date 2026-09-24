@@ -6,8 +6,9 @@ import { Logo } from "@/components/brand/logo";
 import { SearchPalette } from "@/components/search/search-palette";
 import { TOOL_SLUGS } from "@/config/paths";
 import { TOOLS } from "@/config/tools";
-import { useToolCards, useUi } from "@/i18n";
+import { useLocalePath, useToolCards, useUi } from "@/i18n";
 import { cx } from "@/utils/cx";
+import { LanguageSwitcher } from "./language-switcher";
 
 const QUICK_LINKS = ["heic-a-jpg", "comprimir-imagen", "redimensionar-imagen"] as const;
 
@@ -17,6 +18,7 @@ const ANNOUNCEMENT_KEY = "dorfic:announcement:heic-a-jpg";
 /** Franja de anuncio que vive dentro del header, así se queda visible al hacer scroll. */
 const AnnouncementBar = ({ onDismiss }: { onDismiss: () => void }) => {
     const { announcement } = useUi();
+    const to = useLocalePath();
 
     return (
         <div className="bg-brand-solid text-white">
@@ -24,7 +26,7 @@ const AnnouncementBar = ({ onDismiss }: { onDismiss: () => void }) => {
                 <p className="flex-1 text-center text-sm font-medium">
                     <span>{announcement.text}</span>{" "}
                     <Link
-                        to={announcement.href}
+                        to={to({ type: "tool", id: "heic-a-jpg" })}
                         className="inline-flex items-center gap-1 font-semibold whitespace-nowrap underline underline-offset-2 outline-white hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-2"
                     >
                         {announcement.cta}
@@ -47,6 +49,7 @@ const AnnouncementBar = ({ onDismiss }: { onDismiss: () => void }) => {
 export const SiteHeader = () => {
     const ui = useUi();
     const cards = useToolCards();
+    const to = useLocalePath();
     const [open, setOpen] = useState(false);
     const panelId = useId();
     const { pathname } = useLocation();
@@ -96,7 +99,7 @@ export const SiteHeader = () => {
             {showAnnouncement && <AnnouncementBar onDismiss={dismissAnnouncement} />}
             <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 md:px-8">
                 <Link
-                    to="/"
+                    to={to({ type: "home" })}
                     aria-label={ui.brand.homeLink}
                     className="group rounded-md outline-focus-ring focus-visible:outline-2 focus-visible:outline-offset-4"
                 >
@@ -108,7 +111,7 @@ export const SiteHeader = () => {
                         {QUICK_LINKS.map((slug) => (
                             <li key={slug}>
                                 <NavLink
-                                    to={`/${slug}`}
+                                    to={to({ type: "tool", id: slug })}
                                     className={({ isActive }) =>
                                         cx(
                                             "rounded-lg px-3 py-2 text-sm font-semibold text-tertiary transition duration-100 ease-linear hover:bg-primary_hover hover:text-secondary",
@@ -123,6 +126,7 @@ export const SiteHeader = () => {
                     </ul>
 
                     <SearchPalette />
+                    <LanguageSwitcher />
                     <button
                         type="button"
                         aria-expanded={open}
@@ -164,7 +168,7 @@ export const SiteHeader = () => {
                                             return (
                                                 <li key={slug}>
                                                     <Link
-                                                        to={`/${slug}`}
+                                                        to={to({ type: "tool", id: slug })}
                                                         className="flex items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium text-secondary transition duration-100 ease-linear hover:bg-primary_hover hover:text-primary"
                                                     >
                                                         <span className="flex size-8 items-center justify-center rounded-md bg-brand-primary text-fg-brand-primary">
