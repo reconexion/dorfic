@@ -5,7 +5,7 @@ import path from "node:path";
 import { INDEXABLE_PATHS, LOCALES, NOT_FOUND_PATHS, PAGE_SLUGS, TOOL_SLUGS, type Target, localizePath } from "./src/config/paths";
 
 /**
- * Scripts de consentimiento (CMP de Gatekeeper, primero) y de Ezoic, en este orden exacto.
+ * Scripts de consentimiento (CMP de Gatekeeper, primero), de Ezoic (en este orden exacto) y de verificación de AdSense.
  * Se insertan en el HTML ya prerenderizado, justo después de charset y viewport (que deben ir primero),
  * y no desde React: React 19 reubica los <script async> del <head> y podría cargar Ezoic antes que el CMP.
  */
@@ -15,6 +15,7 @@ const HEAD_SCRIPTS = [
     '<script async src="//www.ezojs.com/ezoic/sa.min.js"></script>',
     "<script>window.ezstandalone = window.ezstandalone || {}; ezstandalone.cmd = ezstandalone.cmd || [];</script>",
     '<script src="//ezoicanalytics.com/analytics.js"></script>',
+    '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9690751631806166" crossorigin="anonymous"></script>',
 ].join("");
 const HEAD_SCRIPTS_AFTER = '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>';
 
@@ -41,7 +42,7 @@ export default {
         await rm(path.join(clientDir, "__spa-fallback.html"), { force: true });
 
         // 1b) Los modulepreload van con prioridad baja: primero CSS, fuente y texto (FCP/LCP), luego JS.
-        //     Y los scripts de consentimiento/Ezoic al inicio del <head> de todas las páginas.
+        //     Y los scripts de consentimiento/Ezoic/AdSense al inicio del <head> de todas las páginas.
         for (const full of await htmlFiles(clientDir)) {
             const html = await readFile(full, "utf8");
             if (!html.includes(HEAD_SCRIPTS_AFTER)) throw new Error(`No se encontró el meta viewport en ${full} para insertar HEAD_SCRIPTS`);

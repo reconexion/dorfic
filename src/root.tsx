@@ -41,7 +41,7 @@ export function Layout({ children }: { children: ReactNode }) {
                 {BING_SITE_VERIFICATION && <meta name="msvalidate.01" content={BING_SITE_VERIFICATION} />}
                 <Meta />
                 <Links />
-                {/* Los scripts de consentimiento y de Ezoic se insertan al inicio del <head> en el build (react-router.config.ts). */}
+                {/* Los scripts de consentimiento, Ezoic y AdSense se insertan al inicio del <head> en el build (react-router.config.ts). */}
             </head>
             <body className="min-h-dvh bg-page text-primary antialiased">
                 {children}
