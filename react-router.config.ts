@@ -5,6 +5,20 @@ import path from "node:path";
 import { INDEXABLE_PATHS, LOCALES, NOT_FOUND_PATHS, PAGE_SLUGS, TOOL_SLUGS, type Target, localizePath } from "./src/config/paths";
 
 /**
+ * Scripts de consentimiento (CMP de Gatekeeper, primero) y de Ezoic, en este orden exacto.
+ * Se insertan en el HTML ya prerenderizado, justo después de charset y viewport (que deben ir primero),
+ * y no desde React: React 19 reubica los <script async> del <head> y podría cargar Ezoic antes que el CMP.
+ */
+const HEAD_SCRIPTS = [
+    '<script data-cfasync="false" src="https://cmp.gatekeeperconsent.com/min.js"></script>',
+    '<script data-cfasync="false" src="https://the.gatekeeperconsent.com/cmp.min.js"></script>',
+    '<script async src="//www.ezojs.com/ezoic/sa.min.js"></script>',
+    "<script>window.ezstandalone = window.ezstandalone || {}; ezstandalone.cmd = ezstandalone.cmd || [];</script>",
+    '<script src="//ezoicanalytics.com/analytics.js"></script>',
+].join("");
+const HEAD_SCRIPTS_AFTER = '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>';
+
+/**
  * Sitio 100% estático: sin SSR en producción, pero cada ruta se PRERENDERIZA
  * a HTML con su contenido, <title>, meta tags y JSON-LD ya incluidos.
  */
@@ -27,9 +41,16 @@ export default {
         await rm(path.join(clientDir, "__spa-fallback.html"), { force: true });
 
         // 1b) Los modulepreload van con prioridad baja: primero CSS, fuente y texto (FCP/LCP), luego JS.
+        //     Y los scripts de consentimiento/Ezoic al inicio del <head> de todas las páginas.
         for (const full of await htmlFiles(clientDir)) {
             const html = await readFile(full, "utf8");
-            await writeFile(full, html.replaceAll('<link rel="modulepreload" href=', '<link rel="modulepreload" fetchpriority="low" href='));
+            if (!html.includes(HEAD_SCRIPTS_AFTER)) throw new Error(`No se encontró el meta viewport en ${full} para insertar HEAD_SCRIPTS`);
+            await writeFile(
+                full,
+                html
+                    .replace(HEAD_SCRIPTS_AFTER, HEAD_SCRIPTS_AFTER + HEAD_SCRIPTS)
+                    .replaceAll('<link rel="modulepreload" href=', '<link rel="modulepreload" fetchpriority="low" href='),
+            );
         }
 
         // 2) sitemap.xml y robots.txt a partir de la lista de rutas.
