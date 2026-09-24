@@ -146,7 +146,7 @@ export const ui: UiDictionary = {
         cta: "Back to home",
     },
     contactPage: {
-        emailLabel: "Email",
+        telegramLabel: "Message us on Telegram",
     },
     seo: {
         ogImageAlt: "Dorfic: free image tools in your browser",

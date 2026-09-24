@@ -42,14 +42,14 @@ export const acerca: LegalPageContent = {
 
 export const contacto: LegalPageContent = {
     title: "Contato",
-    metaDescription: "Tem dúvidas, sugestões ou encontrou um erro na Dorfic? Escreva para nós por e-mail e responderemos o quanto antes.",
+    metaDescription: "Tem dúvidas, sugestões ou encontrou um erro na Dorfic? Fale com a gente no Telegram e responderemos o quanto antes.",
     h1: "Contato",
     intro: "Tem uma dúvida, uma sugestão de nova ferramenta ou encontrou algo que não funciona bem? Vamos adorar ler sua mensagem.",
     sections: [
         {
             heading: "Escreva para nós",
             paragraphs: [
-                "A melhor forma de falar com a gente é por e-mail. Normalmente respondemos em 2 a 5 dias úteis.",
+                "A melhor forma de falar com a gente é pelo Telegram, em @tostilocos. Normalmente respondemos em 2 a 5 dias úteis.",
                 "Se for relatar um problema, conte qual ferramenta você usava, em qual dispositivo e navegador, e qual mensagem apareceu. Por favor, não nos envie imagens com informações pessoais: não precisamos delas para ajudar você.",
             ],
         },
@@ -76,7 +76,7 @@ export const privacidad: LegalPageContent = {
         {
             heading: "1. Responsável",
             paragraphs: [
-                "A Dorfic (“Dorfic”, “nós”) é responsável pelo site e pelas ferramentas que oferece. Você pode falar com a gente sobre qualquer assunto relacionado a esta política pelo e-mail indicado na página de Contato.",
+                "A Dorfic (“Dorfic”, “nós”) é responsável pelo site e pelas ferramentas que oferece. Você pode falar com a gente sobre qualquer assunto relacionado a esta política pelo Telegram (@tostilocos), como indicado na página de Contato.",
             ],
         },
         {
@@ -109,7 +109,7 @@ export const privacidad: LegalPageContent = {
         {
             heading: "6. Seus direitos",
             paragraphs: [
-                "Como não coletamos dados que identifiquem você diretamente, na maioria dos casos não temos informações suas para consultar, corrigir ou excluir. Mesmo assim, você pode nos escrever para exercer seus direitos de acesso, correção, eliminação ou oposição previstos na Lei Geral de Proteção de Dados (LGPD) ou na lei que se aplique a você, ou para tirar qualquer dúvida sobre esta política. Se você nos escrever por e-mail, usaremos seu endereço apenas para responder.",
+                "Como não coletamos dados que identifiquem você diretamente, na maioria dos casos não temos informações suas para consultar, corrigir ou excluir. Mesmo assim, você pode nos escrever para exercer seus direitos de acesso, correção, eliminação ou oposição previstos na Lei Geral de Proteção de Dados (LGPD) ou na lei que se aplique a você, ou para tirar qualquer dúvida sobre esta política. Se você nos escrever pelo Telegram, usaremos seu usuário apenas para responder.",
             ],
         },
         {

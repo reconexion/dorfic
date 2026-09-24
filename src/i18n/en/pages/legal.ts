@@ -41,14 +41,14 @@ export const acerca: LegalPageContent = {
 
 export const contacto: LegalPageContent = {
     title: "Contact",
-    metaDescription: "Questions, suggestions or found a bug in Dorfic? Send us an email and we'll get back to you as soon as possible.",
+    metaDescription: "Questions, suggestions or found a bug in Dorfic? Message us on Telegram and we'll get back to you as soon as possible.",
     h1: "Contact",
     intro: "Have a question, an idea for a new tool, or found something that doesn't work right? We'd love to hear from you.",
     sections: [
         {
             heading: "Write to us",
             paragraphs: [
-                "The best way to reach us is by email. We usually reply within 2 to 5 business days.",
+                "The best way to reach us is on Telegram, at @tostilocos. We usually reply within 2 to 5 business days.",
                 "If you're reporting a problem, tell us which tool you were using, on which device and browser, and what message appeared. Please don't send us images containing personal information: we don't need them to help you.",
             ],
         },
@@ -75,7 +75,7 @@ export const privacidad: LegalPageContent = {
         {
             heading: "1. Who is responsible",
             paragraphs: [
-                "Dorfic (“Dorfic”, “we”) is responsible for the website and the tools it offers. You can contact us about anything related to this policy at the email address shown on the Contact page.",
+                "Dorfic (“Dorfic”, “we”) is responsible for the website and the tools it offers. You can contact us about anything related to this policy on Telegram (@tostilocos), as shown on the Contact page.",
             ],
         },
         {
@@ -108,7 +108,7 @@ export const privacidad: LegalPageContent = {
         {
             heading: "6. Your rights",
             paragraphs: [
-                "Since we don't collect data that directly identifies you, in most cases we have no information about you to access, correct or delete. Even so, you can write to us to exercise your rights of access, rectification, erasure or objection under the data protection law that applies to you (for example, the GDPR in Europe or the CCPA in California), or with any question about this policy. If you email us, we will use your address only to reply.",
+                "Since we don't collect data that directly identifies you, in most cases we have no information about you to access, correct or delete. Even so, you can write to us to exercise your rights of access, rectification, erasure or objection under the data protection law that applies to you (for example, the GDPR in Europe or the CCPA in California), or with any question about this policy. If you message us on Telegram, we will use your username only to reply.",
             ],
         },
         {

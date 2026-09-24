@@ -42,14 +42,14 @@ export const acerca: LegalPageContent = {
 
 export const contacto: LegalPageContent = {
     title: "Contact",
-    metaDescription: "Une question, une suggestion ou un bug sur Dorfic ? Écrivez-nous par e-mail, nous vous répondrons dès que possible.",
+    metaDescription: "Une question, une suggestion ou un bug sur Dorfic ? Écrivez-nous sur Telegram, nous vous répondrons dès que possible.",
     h1: "Contact",
     intro: "Vous avez une question, une idée de nouvel outil ou vous avez trouvé quelque chose qui ne fonctionne pas ? Nous serons ravis de vous lire.",
     sections: [
         {
             heading: "Écrivez-nous",
             paragraphs: [
-                "Le meilleur moyen de nous joindre est l'e-mail. Nous répondons généralement sous 2 à 5 jours ouvrés.",
+                "Le meilleur moyen de nous joindre est Telegram, à @tostilocos. Nous répondons généralement sous 2 à 5 jours ouvrés.",
                 "Si vous signalez un problème, indiquez l'outil utilisé, votre appareil et votre navigateur, ainsi que le message affiché. Merci de ne pas nous envoyer d'images contenant des informations personnelles : nous n'en avons pas besoin pour vous aider.",
             ],
         },
@@ -76,7 +76,7 @@ export const privacidad: LegalPageContent = {
         {
             heading: "1. Responsable du traitement",
             paragraphs: [
-                "Dorfic (« Dorfic », « nous ») est responsable du site web et des outils qu'il propose. Vous pouvez nous contacter pour toute question relative à cette politique à l'adresse e-mail indiquée sur la page Contact.",
+                "Dorfic (« Dorfic », « nous ») est responsable du site web et des outils qu'il propose. Vous pouvez nous contacter pour toute question relative à cette politique sur Telegram (@tostilocos), comme indiqué sur la page Contact.",
             ],
         },
         {
@@ -109,7 +109,7 @@ export const privacidad: LegalPageContent = {
         {
             heading: "6. Vos droits",
             paragraphs: [
-                "Comme nous ne collectons pas de données permettant de vous identifier directement, nous n'avons généralement aucune information vous concernant à consulter, corriger ou supprimer. Vous pouvez néanmoins nous écrire pour exercer vos droits d'accès, de rectification, d'effacement, d'opposition et de limitation prévus par le Règlement général sur la protection des données (RGPD), ou pour toute question sur cette politique. Vous pouvez également introduire une réclamation auprès de l'autorité de contrôle de votre pays (en France, la CNIL). Si vous nous écrivez, nous utiliserons votre adresse uniquement pour vous répondre.",
+                "Comme nous ne collectons pas de données permettant de vous identifier directement, nous n'avons généralement aucune information vous concernant à consulter, corriger ou supprimer. Vous pouvez néanmoins nous écrire pour exercer vos droits d'accès, de rectification, d'effacement, d'opposition et de limitation prévus par le Règlement général sur la protection des données (RGPD), ou pour toute question sur cette politique. Vous pouvez également introduire une réclamation auprès de l'autorité de contrôle de votre pays (en France, la CNIL). Si vous nous écrivez sur Telegram, nous utiliserons votre nom d'utilisateur uniquement pour vous répondre.",
             ],
         },
         {

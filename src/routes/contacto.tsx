@@ -1,7 +1,7 @@
-import { Mail01 } from "@untitledui/icons";
+import { Send01 } from "@untitledui/icons";
 import { type LegalLoaderData, LegalPage, legalMeta } from "@/components/content/legal-page";
 import { resolvePath } from "@/config/paths";
-import { CONTACT_EMAIL } from "@/config/site";
+import { CONTACT_TELEGRAM, CONTACT_TELEGRAM_URL } from "@/config/site";
 import { useUi } from "@/i18n";
 import { loadPageContent } from "@/i18n/content.server";
 
@@ -16,15 +16,17 @@ export default function Page({ loaderData }: { loaderData: LegalLoaderData }) {
     return (
         <LegalPage content={loaderData.content}>
             <a
-                href={`mailto:${CONTACT_EMAIL}`}
+                href={CONTACT_TELEGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="mt-8 flex items-center gap-4 rounded-xl border border-secondary p-5 shadow-xs transition duration-150 hover:border-brand hover:shadow-md"
             >
                 <span className="flex size-12 items-center justify-center rounded-lg bg-brand-primary text-fg-brand-primary">
-                    <Mail01 aria-hidden className="size-6" />
+                    <Send01 aria-hidden className="size-6" />
                 </span>
                 <span className="flex flex-col">
-                    <span className="text-sm text-tertiary">{ui.contactPage.emailLabel}</span>
-                    <span className="text-lg font-semibold text-brand-secondary">{CONTACT_EMAIL}</span>
+                    <span className="text-sm text-tertiary">{ui.contactPage.telegramLabel}</span>
+                    <span className="text-lg font-semibold text-brand-secondary">@{CONTACT_TELEGRAM}</span>
                 </span>
             </a>
         </LegalPage>

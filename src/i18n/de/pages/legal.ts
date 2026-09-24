@@ -42,14 +42,14 @@ export const acerca: LegalPageContent = {
 
 export const contacto: LegalPageContent = {
     title: "Kontakt",
-    metaDescription: "Fragen, Vorschläge oder einen Fehler in Dorfic gefunden? Schreib uns eine E-Mail und wir antworten so schnell wie möglich.",
+    metaDescription: "Fragen, Vorschläge oder einen Fehler in Dorfic gefunden? Schreib uns auf Telegram und wir antworten so schnell wie möglich.",
     h1: "Kontakt",
     intro: "Du hast eine Frage, eine Idee für ein neues Tool oder etwas gefunden, das nicht richtig funktioniert? Wir freuen uns auf deine Nachricht.",
     sections: [
         {
             heading: "Schreib uns",
             paragraphs: [
-                "Am besten erreichst du uns per E-Mail. Wir antworten normalerweise innerhalb von 2 bis 5 Werktagen.",
+                "Am besten erreichst du uns auf Telegram unter @tostilocos. Wir antworten normalerweise innerhalb von 2 bis 5 Werktagen.",
                 "Wenn du ein Problem meldest, schreib uns, welches Tool du benutzt hast, mit welchem Gerät und Browser und welche Meldung erschienen ist. Bitte schick uns keine Bilder mit persönlichen Informationen: Wir brauchen sie nicht, um dir zu helfen.",
             ],
         },
@@ -76,7 +76,7 @@ export const privacidad: LegalPageContent = {
         {
             heading: "1. Verantwortlicher",
             paragraphs: [
-                "Dorfic („Dorfic“, „wir“) ist für die Website und die angebotenen Tools verantwortlich. Bei allen Fragen zu dieser Erklärung erreichst du uns über die E-Mail-Adresse auf der Kontaktseite.",
+                "Dorfic („Dorfic“, „wir“) ist für die Website und die angebotenen Tools verantwortlich. Bei allen Fragen zu dieser Erklärung erreichst du uns auf Telegram (@tostilocos), wie auf der Kontaktseite angegeben.",
             ],
         },
         {
@@ -109,7 +109,7 @@ export const privacidad: LegalPageContent = {
         {
             heading: "6. Deine Rechte",
             paragraphs: [
-                "Da wir keine Daten erheben, die dich direkt identifizieren, haben wir in den meisten Fällen keine Informationen über dich, die wir auskunftsweise herausgeben, berichtigen oder löschen könnten. Du kannst uns dennoch jederzeit schreiben, um deine Rechte nach der DSGVO auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch auszuüben, oder bei Fragen zu dieser Erklärung. Außerdem hast du das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren. Wenn du uns per E-Mail schreibst, verwenden wir deine Adresse nur, um dir zu antworten.",
+                "Da wir keine Daten erheben, die dich direkt identifizieren, haben wir in den meisten Fällen keine Informationen über dich, die wir auskunftsweise herausgeben, berichtigen oder löschen könnten. Du kannst uns dennoch jederzeit schreiben, um deine Rechte nach der DSGVO auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch auszuüben, oder bei Fragen zu dieser Erklärung. Außerdem hast du das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren. Wenn du uns auf Telegram schreibst, verwenden wir deinen Benutzernamen nur, um dir zu antworten.",
             ],
         },
         {

@@ -42,14 +42,14 @@ export const acerca: LegalPageContent = {
 
 export const contacto: LegalPageContent = {
     title: "Contacto",
-    metaDescription: "¿Tienes dudas, sugerencias o encontraste un error en Dorfic? Escríbenos por correo electrónico y te responderemos lo antes posible.",
+    metaDescription: "¿Tienes dudas, sugerencias o encontraste un error en Dorfic? Escríbenos por Telegram y te responderemos lo antes posible.",
     h1: "Contacto",
     intro: "¿Tienes una duda, una sugerencia de nueva herramienta o encontraste algo que no funciona bien? Nos encantará leerte.",
     sections: [
         {
             heading: "Escríbenos",
             paragraphs: [
-                "La mejor forma de contactarnos es por correo electrónico. Respondemos normalmente en un plazo de 2 a 5 días hábiles.",
+                "La mejor forma de contactarnos es por Telegram, en @tostilocos. Respondemos normalmente en un plazo de 2 a 5 días hábiles.",
                 "Si nos reportas un problema, cuéntanos qué herramienta usabas, desde qué dispositivo y navegador, y qué mensaje apareció. Por favor no nos envíes imágenes con información personal: no las necesitamos para ayudarte.",
             ],
         },
@@ -76,7 +76,7 @@ export const privacidad: LegalPageContent = {
         {
             heading: "1. Responsable",
             paragraphs: [
-                "Dorfic (en adelante, “Dorfic”, “nosotros”) es responsable del sitio web y de las herramientas que ofrece. Puedes contactarnos para cualquier asunto relacionado con este aviso en el correo indicado en la página de Contacto.",
+                "Dorfic (en adelante, “Dorfic”, “nosotros”) es responsable del sitio web y de las herramientas que ofrece. Puedes contactarnos para cualquier asunto relacionado con este aviso por Telegram (@tostilocos), como se indica en la página de Contacto.",
             ],
         },
         {
@@ -109,7 +109,7 @@ export const privacidad: LegalPageContent = {
         {
             heading: "6. Tus derechos",
             paragraphs: [
-                "Como no recopilamos datos que te identifiquen directamente, en la mayoría de los casos no tenemos información tuya que consultar, corregir o eliminar. Aun así, puedes escribirnos para ejercer tus derechos de acceso, rectificación, cancelación u oposición (derechos ARCO) conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, o para cualquier duda sobre este aviso. Si nos escribes por correo, usaremos tu dirección únicamente para responderte.",
+                "Como no recopilamos datos que te identifiquen directamente, en la mayoría de los casos no tenemos información tuya que consultar, corregir o eliminar. Aun así, puedes escribirnos para ejercer tus derechos de acceso, rectificación, cancelación u oposición (derechos ARCO) conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, o para cualquier duda sobre este aviso. Si nos escribes por Telegram, usaremos tu usuario únicamente para responderte.",
             ],
         },
         {

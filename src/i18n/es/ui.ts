@@ -144,7 +144,7 @@ export const ui = {
         cta: "Volver al inicio",
     },
     contactPage: {
-        emailLabel: "Correo electrónico",
+        telegramLabel: "Escríbenos por Telegram",
     },
     seo: {
         ogImageAlt: "Dorfic: herramientas de imagen gratis en tu navegador",

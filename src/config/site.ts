@@ -3,8 +3,9 @@ export const SITE_URL = (import.meta.env.SITE_URL || "https://dorfic.pages.dev")
 
 export const SITE_NAME = "Dorfic";
 
-/** Correo de contacto público (cámbialo en .env con VITE_CONTACT_EMAIL). */
-export const CONTACT_EMAIL = import.meta.env.VITE_CONTACT_EMAIL || "hola@dorfic.com";
+/** Usuario de Telegram para contacto (página /contacto). */
+export const CONTACT_TELEGRAM = "tostilocos";
+export const CONTACT_TELEGRAM_URL = `https://t.me/${CONTACT_TELEGRAM}`;
 
 /** Token de Cloudflare Web Analytics (sin cookies). Si está vacío, no se carga el script. */
 export const CF_BEACON_TOKEN = import.meta.env.VITE_CF_BEACON_TOKEN || "";

@@ -49,7 +49,6 @@ El build:
 4. En **Environment variables** (Production y Preview) agrega:
     - `SITE_URL` = `https://tu-dominio.com` (cuando lo compres; mientras tanto `https://<proyecto>.pages.dev`)
     - `NODE_VERSION` = `22`
-    - `VITE_CONTACT_EMAIL` = tu correo público
     - `VITE_CF_BEACON_TOKEN` = (opcional) token de Web Analytics
 5. **Save and Deploy**.
 6. Cuando compres el dominio: **Custom domains → Set up a custom domain**, actualiza `SITE_URL` y vuelve a desplegar (así se regeneran canónicas y sitemap).
