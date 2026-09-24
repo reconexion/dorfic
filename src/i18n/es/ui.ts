@@ -115,6 +115,7 @@ export const ui = {
         related: "Otras herramientas que te pueden servir",
         faq: "Preguntas frecuentes",
         adLabel: "Publicidad",
+        adClose: "Cerrar anuncio",
         toolRegion: "Herramienta",
         breadcrumbHome: "Inicio",
         open: "Abrir",

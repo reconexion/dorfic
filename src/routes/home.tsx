@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 import { Lock01 } from "@untitledui/icons";
 import { Link } from "react-router";
-import { AdSlot } from "@/components/ads/ad-slot";
+import { AdSlot, AnchorAd } from "@/components/ads/ad-slot";
 import { FoxMascot } from "@/components/brand/fox-mascot";
 import { HeroBackground } from "@/components/content/hero-background";
 import { ToolDirectory } from "@/components/content/tool-directory";
@@ -121,6 +121,9 @@ export default function Home({ loaderData: { home } }: { loaderData: LoaderData 
                     ))}
                 </ul>
             </section>
+
+            {/* El inicio no tiene lateral: la barra inferior es el anuncio siempre visible, también en escritorio. */}
+            <AnchorAd />
         </>
     );
 }

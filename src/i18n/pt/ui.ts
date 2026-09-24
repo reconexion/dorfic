@@ -117,6 +117,7 @@ export const ui: UiDictionary = {
         related: "Outras ferramentas que podem ser úteis",
         faq: "Perguntas frequentes",
         adLabel: "Publicidade",
+        adClose: "Fechar anúncio",
         toolRegion: "Ferramenta",
         breadcrumbHome: "Início",
         open: "Abrir",

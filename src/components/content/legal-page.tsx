@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { AnchorAd } from "@/components/ads/ad-slot";
 import { ContentSections } from "@/components/content/content-sections";
 import { type PageSlug, resolvePath } from "@/config/paths";
 import { fmt, useUi } from "@/i18n";
@@ -33,6 +34,8 @@ export const LegalPage = ({ content, children }: { content: LegalPageContent; ch
             <div className="mt-10">
                 <ContentSections sections={content.sections} />
             </div>
+            {/* Páginas cortas: solo la barra inferior, sin anuncios entre el texto. */}
+            <AnchorAd />
         </div>
     );
 };

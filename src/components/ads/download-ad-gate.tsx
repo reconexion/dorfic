@@ -1,15 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Download01 } from "@untitledui/icons";
 import { m } from "motion/react";
+import { AdUnit } from "@/components/ads/ad-slot";
 import { Button } from "@/components/base/buttons/button";
-import { ADSENSE_CLIENT, ADSENSE_SLOT_DOWNLOAD, DOWNLOAD_AD_SECONDS } from "@/config/site";
+import { ADSENSE_SLOT_DOWNLOAD, DOWNLOAD_AD_SECONDS } from "@/config/site";
 import { fmt, useUi } from "@/i18n";
-
-declare global {
-    interface Window {
-        adsbygoogle?: unknown[];
-    }
-}
 
 interface DownloadAdGateProps {
     onContinue: () => void;
@@ -55,7 +50,10 @@ export const DownloadAdGate = ({ onContinue, onCancel }: DownloadAdGateProps) =>
                 <p className="mt-1 text-sm text-tertiary">{ui.downloadAd.body}</p>
             </div>
 
-            <AdUnit label={ui.toolPage.adLabel} />
+            <aside aria-label={ui.toolPage.adLabel} className="flex w-full flex-col items-center">
+                <span className="mb-1 text-[11px] tracking-wide text-quaternary uppercase">{ui.toolPage.adLabel}</span>
+                <AdUnit slot={ADSENSE_SLOT_DOWNLOAD} name="download" className="h-[250px] w-[300px]" />
+            </aside>
 
             <div className="mt-2 flex w-full flex-col-reverse gap-2 sm:w-auto sm:flex-row">
                 <Button size="md" color="tertiary" onClick={onCancel}>
@@ -66,35 +64,5 @@ export const DownloadAdGate = ({ onContinue, onCancel }: DownloadAdGateProps) =>
                 </Button>
             </div>
         </m.div>
-    );
-};
-
-/** Rectángulo 300×250 de AdSense; sin configuración muestra un espacio reservado del mismo tamaño. */
-const AdUnit = ({ label }: { label: string }) => {
-    const enabled = Boolean(ADSENSE_CLIENT && ADSENSE_SLOT_DOWNLOAD);
-
-    useEffect(() => {
-        if (!enabled) return;
-        try {
-            (window.adsbygoogle = window.adsbygoogle || []).push({});
-        } catch {
-            // Bloqueador de anuncios o script aún sin cargar: la descarga sigue funcionando.
-        }
-    }, [enabled]);
-
-    return (
-        <aside aria-label={label} className="flex w-full flex-col items-center">
-            <span className="mb-1 text-[11px] tracking-wide text-quaternary uppercase">{label}</span>
-            {enabled ? (
-                <ins
-                    className="adsbygoogle"
-                    style={{ display: "inline-block", width: 300, height: 250 }}
-                    data-ad-client={ADSENSE_CLIENT}
-                    data-ad-slot={ADSENSE_SLOT_DOWNLOAD}
-                />
-            ) : (
-                <div data-ad-slot="download" className="h-[250px] w-[300px] max-w-full rounded-lg border border-dashed border-secondary bg-primary" />
-            )}
-        </aside>
     );
 };

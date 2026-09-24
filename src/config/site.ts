@@ -19,10 +19,14 @@ export const BING_SITE_VERIFICATION = import.meta.env.VITE_BING_SITE_VERIFICATIO
  * se ven como un espacio reservado (útil en desarrollo o mientras aprueban el sitio).
  */
 export const ADSENSE_CLIENT = import.meta.env.VITE_ADSENSE_CLIENT || "";
-/** Bloque de anuncio que se muestra antes de entregar la descarga. */
-export const ADSENSE_SLOT_DOWNLOAD = import.meta.env.VITE_ADSENSE_SLOT_DOWNLOAD || "";
-/** Segundos que se muestra el anuncio antes de poder continuar con la descarga. */
-export const DOWNLOAD_AD_SECONDS = 5;
+/** Bloque de display para los anuncios dentro de la página (debajo de la herramienta, entre el contenido y lateral). */
+export const ADSENSE_SLOT_DISPLAY = import.meta.env.VITE_ADSENSE_SLOT_DISPLAY || "";
+/** Barra fija inferior (320×50 en móvil, 728×90 en escritorio). Si no se define, usa el bloque de display. */
+export const ADSENSE_SLOT_ANCHOR = import.meta.env.VITE_ADSENSE_SLOT_ANCHOR || ADSENSE_SLOT_DISPLAY;
+/** Bloque de anuncio que se muestra antes de entregar la descarga. Si no se define, usa el bloque de display. */
+export const ADSENSE_SLOT_DOWNLOAD = import.meta.env.VITE_ADSENSE_SLOT_DOWNLOAD || ADSENSE_SLOT_DISPLAY;
+/** Segundos que se muestra el anuncio antes de poder continuar con la descarga (solo la primera de cada visita). */
+export const DOWNLOAD_AD_SECONDS = 3;
 
 export const OG_IMAGE = `${SITE_URL}/og-image.png`;
 

@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 import { ChevronRight } from "@untitledui/icons";
 import { Link } from "react-router";
-import { AdSlot } from "@/components/ads/ad-slot";
+import { AdSlot, AnchorAd, SIDEBAR_AD_ATTR } from "@/components/ads/ad-slot";
 import { ContentSections } from "@/components/content/content-sections";
 import { FaqList } from "@/components/content/faq";
 import { HeroBackground } from "@/components/content/hero-background";
@@ -51,14 +51,17 @@ const rise = (ms: number) => ({ ["--rise-delay" as string]: `${ms}ms` });
 /**
  * Estructura común de las páginas de herramienta (todo lo importante centrado):
  * H1 → herramienta (visible sin scroll) → anuncio → contenido útil + anuncio lateral → FAQ → relacionadas.
+ *
+ * Siempre hay un anuncio a la vista sin cansar: la barra inferior (o, en escritorio, el lateral fijo mientras
+ * se ve), más solo dos dentro de la página (debajo de la herramienta y a mitad del contenido).
  */
 export const ToolPage = ({ content }: { content: ToolContent }) => {
     const ui = useUi();
     const cards = useToolCards();
     const to = useLocalePath();
-    // Contenido en 3 partes con un anuncio entre cada una (sin cansar: siempre separados por texto útil).
-    const third = Math.ceil(content.sections.length / 3);
-    const parts = [content.sections.slice(0, third), content.sections.slice(third, third * 2), content.sections.slice(third * 2)];
+    // Contenido en 2 mitades con un anuncio en medio (siempre rodeado de texto útil).
+    const half = Math.ceil(content.sections.length / 2);
+    const parts = [content.sections.slice(0, half), content.sections.slice(half)];
 
     return (
         <>
@@ -105,18 +108,14 @@ export const ToolPage = ({ content }: { content: ToolContent }) => {
                         <ContentSections sections={parts[0]} />
                         <AdSlot variant="in-content" className="my-10" />
                         <ContentSections sections={parts[1]} />
-                        <AdSlot variant="in-content" className="my-10" />
-                        <ContentSections sections={parts[2]} />
                         <FaqList faqs={content.faqs} title={ui.toolPage.faq} />
                     </article>
                     <div className="hidden lg:block">
-                        <div className="sticky top-24">
+                        <div className="sticky top-24" {...{ [SIDEBAR_AD_ATTR]: "" }}>
                             <AdSlot variant="sidebar" />
                         </div>
                     </div>
                 </div>
-
-                <AdSlot variant="below-tool" className="mx-auto mt-12 max-w-3xl" />
 
                 <section aria-labelledby="related-title" className="mt-12">
                     <h2 id="related-title" className="text-center text-display-xs font-bold text-primary md:text-display-sm">
@@ -125,6 +124,8 @@ export const ToolPage = ({ content }: { content: ToolContent }) => {
                     <ToolGrid slugs={content.related} className="mt-8" />
                 </section>
             </div>
+
+            <AnchorAd />
         </>
     );
 };
