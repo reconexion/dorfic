@@ -21,6 +21,14 @@ import { REDIRECT_HEADERS, decideLocale } from "../src/lib/locale-redirect.ts";
 const ROOT = path.resolve(import.meta.dirname, "../build/client");
 const PORT = Number(process.env.PORT) || 8080;
 
+/**
+ * Redirecciones 301 fijas a otros sitios.
+ * - /ads.txt: lo administra adstxtmanager (el estándar ads.txt permite un redirect a otro dominio).
+ */
+const REDIRECTS: Record<string, string> = {
+    "/ads.txt": "https://srv.adstxtmanager.com/19390/dorfic.online",
+};
+
 const CONTENT_TYPES: Record<string, string> = {
     ".html": "text/html; charset=utf-8",
     ".js": "text/javascript; charset=utf-8",
@@ -114,6 +122,12 @@ const server = createServer((req, res) => {
 
     if (req.method !== "GET" && req.method !== "HEAD") {
         res.writeHead(405, { Allow: "GET, HEAD" }).end();
+        return;
+    }
+
+    const redirect = REDIRECTS[pathname];
+    if (redirect) {
+        res.writeHead(301, { Location: redirect, "Cache-Control": "public, max-age=3600" }).end();
         return;
     }
 
