@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 import { Lock01 } from "@untitledui/icons";
 import { Link } from "react-router";
-import { AdSlot, AnchorAd } from "@/components/ads/ad-slot";
+import { AdPlacement } from "@/components/ads/ad-slot";
 import { FoxMascot } from "@/components/brand/fox-mascot";
 import { HeroBackground } from "@/components/content/hero-background";
 import { ToolDirectory } from "@/components/content/tool-directory";
@@ -89,7 +89,7 @@ export default function Home({ loaderData: { home } }: { loaderData: LoaderData 
             </section>
 
             <div className="mx-auto max-w-3xl px-4 md:px-8">
-                <AdSlot variant="below-tool" />
+                <AdPlacement name="homeBelowHero" />
             </div>
 
             <section aria-labelledby="tools-title" className="mx-auto max-w-6xl px-4 py-12 md:px-8 md:py-16">
@@ -100,7 +100,7 @@ export default function Home({ loaderData: { home } }: { loaderData: LoaderData 
             </section>
 
             <div className="mx-auto max-w-3xl px-4 md:px-8">
-                <AdSlot variant="in-content" />
+                <AdPlacement name="homeMid" />
             </div>
 
             <section aria-labelledby="about-title" className="mx-auto max-w-3xl px-4 py-12 text-center md:px-8 md:py-16">
@@ -122,8 +122,9 @@ export default function Home({ loaderData: { home } }: { loaderData: LoaderData 
                 </ul>
             </section>
 
-            {/* El inicio no tiene lateral: la barra inferior es el anuncio siempre visible, también en escritorio. */}
-            <AnchorAd />
+            <div className="mx-auto max-w-3xl px-4 md:px-8">
+                <AdPlacement name="homeBottom" />
+            </div>
         </>
     );
 }

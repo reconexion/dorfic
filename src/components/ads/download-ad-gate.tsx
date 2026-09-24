@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Download01 } from "@untitledui/icons";
 import { m } from "motion/react";
-import { AdUnit } from "@/components/ads/ad-slot";
+import { AdPlacement } from "@/components/ads/ad-slot";
 import { Button } from "@/components/base/buttons/button";
-import { ADSENSE_SLOT_DOWNLOAD, DOWNLOAD_AD_SECONDS } from "@/config/site";
+import { DOWNLOAD_AD_SECONDS } from "@/config/site";
 import { fmt, useUi } from "@/i18n";
 
 interface DownloadAdGateProps {
@@ -14,8 +14,8 @@ interface DownloadAdGateProps {
 /**
  * Panel con un anuncio corto que aparece antes de entregar la descarga.
  *
- * Va DENTRO de la página (no es un pop-up ni cubre la pantalla): las políticas de
- * AdSense no permiten anuncios en ventanas emergentes. Por la misma razón los botones
+ * Va DENTRO de la página (no es un pop-up ni cubre la pantalla): las políticas de las redes
+ * publicitarias no permiten anuncios en ventanas emergentes. Por la misma razón los botones
  * quedan separados del anuncio, para evitar clics accidentales.
  */
 export const DownloadAdGate = ({ onContinue, onCancel }: DownloadAdGateProps) => {
@@ -50,10 +50,7 @@ export const DownloadAdGate = ({ onContinue, onCancel }: DownloadAdGateProps) =>
                 <p className="mt-1 text-sm text-tertiary">{ui.downloadAd.body}</p>
             </div>
 
-            <aside aria-label={ui.toolPage.adLabel} className="flex w-full flex-col items-center">
-                <span className="mb-1 text-[11px] tracking-wide text-quaternary uppercase">{ui.toolPage.adLabel}</span>
-                <AdUnit slot={ADSENSE_SLOT_DOWNLOAD} name="download" className="h-[250px] w-[300px]" />
-            </aside>
+            <AdPlacement name="toolDownload" className="[--ad-gap:0.5rem]" />
 
             <div className="mt-2 flex w-full flex-col-reverse gap-2 sm:w-auto sm:flex-row">
                 <Button size="md" color="tertiary" onClick={onCancel}>

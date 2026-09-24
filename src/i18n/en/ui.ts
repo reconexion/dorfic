@@ -116,8 +116,6 @@ export const ui: UiDictionary = {
     toolPage: {
         related: "Other tools you might find useful",
         faq: "Frequently asked questions",
-        adLabel: "Advertisement",
-        adClose: "Close ad",
         toolRegion: "Tool",
         breadcrumbHome: "Home",
         open: "Open",

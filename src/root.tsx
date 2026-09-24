@@ -8,7 +8,7 @@ import { openHydrationGate } from "@/components/motion/hydration-gate";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { PageTransition } from "@/components/motion/page-transition";
 import { LOCALE_TAGS, localeFromPath, localizePath } from "@/config/paths";
-import { ADSENSE_CLIENT, BING_SITE_VERIFICATION, CF_BEACON_TOKEN, GOOGLE_SITE_VERIFICATION, THEME_COLOR } from "@/config/site";
+import { BING_SITE_VERIFICATION, CF_BEACON_TOKEN, GOOGLE_SITE_VERIFICATION, THEME_COLOR } from "@/config/site";
 import { LocaleContext, getUi, useLocale } from "@/i18n";
 import { preferredLocaleRedirect } from "@/lib/locale-preference";
 import { RouteProvider } from "@/providers/router-provider";
@@ -41,10 +41,7 @@ export function Layout({ children }: { children: ReactNode }) {
                 {BING_SITE_VERIFICATION && <meta name="msvalidate.01" content={BING_SITE_VERIFICATION} />}
                 <Meta />
                 <Links />
-                {/* Google AdSense: se activa con VITE_ADSENSE_CLIENT (recuerda publicar public/ads.txt). */}
-                {ADSENSE_CLIENT && (
-                    <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`} crossOrigin="anonymous" />
-                )}
+                {/* Los scripts de consentimiento y de Ezoic se insertan al inicio del <head> en el build (react-router.config.ts). */}
             </head>
             <body className="min-h-dvh bg-page text-primary antialiased">
                 {children}

@@ -5,10 +5,6 @@ interface ImportMetaEnv {
     readonly VITE_CF_BEACON_TOKEN?: string;
     readonly VITE_GOOGLE_SITE_VERIFICATION?: string;
     readonly VITE_BING_SITE_VERIFICATION?: string;
-    readonly VITE_ADSENSE_CLIENT?: string;
-    readonly VITE_ADSENSE_SLOT_DISPLAY?: string;
-    readonly VITE_ADSENSE_SLOT_ANCHOR?: string;
-    readonly VITE_ADSENSE_SLOT_DOWNLOAD?: string;
 }
 
 interface ImportMeta {

@@ -69,18 +69,11 @@ body {
     font-kerning: normal;
 }
 
-/* Barra de anuncio fija (AnchorAd): la página deja al final un espacio de su misma altura
-   (anuncio + 2×8 px + borde) para que nunca tape el contenido ni el pie. */
-html[data-anchor-ad] {
-    --anchor-ad-h: 67px;
-}
-@media (min-width: 48rem) {
-    html[data-anchor-ad] {
-        --anchor-ad-h: 107px;
-    }
-}
-html[data-anchor-ad] body {
-    padding-bottom: calc(var(--anchor-ad-h) + env(safe-area-inset-bottom));
+/* Anuncios de Ezoic (AdPlacement): el espacio alrededor solo aparece cuando Ezoic llenó el placeholder,
+   así uno vacío no deja huecos en la página. */
+.ad-placement:has(> [id^="ezoic-pub-ad-placeholder-"]:not(:empty)) {
+    margin-block: var(--ad-gap, 2.5rem);
+    text-align: center;
 }
 
 /* Hide the default expand arrow on Safari.  */

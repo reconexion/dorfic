@@ -96,7 +96,7 @@ export const privacidad: LegalPageContent = {
         {
             heading: "4. Publicité et cookies tiers",
             paragraphs: [
-                "Dorfic est financé par la publicité. Nous pouvons afficher des annonces Google AdSense. Google et ses partenaires utilisent des cookies ou d'autres identifiants pour afficher des annonces basées sur vos visites précédentes sur ce site et sur d'autres, et pour en mesurer les performances.",
+                "Dorfic est financé par la publicité. Les annonces sont gérées par Ezoic, qui travaille avec Google et d'autres réseaux publicitaires. Ezoic, Google et leurs partenaires utilisent des cookies ou d'autres identifiants pour afficher des annonces basées sur vos visites précédentes sur ce site et sur d'autres, et pour en mesurer les performances.",
                 "Vous pouvez désactiver la publicité personnalisée dans les Paramètres des annonces Google (adssettings.google.com) ou consulter www.youronlinechoices.com pour refuser les cookies d'autres prestataires. Pour en savoir plus sur l'utilisation des données par Google, consultez policies.google.com/technologies/partner-sites. Conformément à la réglementation, nous vous demanderons votre consentement avant d'utiliser des cookies publicitaires.",
             ],
         },

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { AnchorAd } from "@/components/ads/ad-slot";
+import { AdPlacement } from "@/components/ads/ad-slot";
 import { ContentSections } from "@/components/content/content-sections";
 import { type PageSlug, resolvePath } from "@/config/paths";
 import { fmt, useUi } from "@/i18n";
@@ -23,7 +23,8 @@ export const legalMeta =
               })
             : [];
 
-export const LegalPage = ({ content, children }: { content: LegalPageContent; children?: ReactNode }) => {
+/** `children` va después de la introducción; `after`, al final del texto (p. ej. el aviso de Ezoic en Privacidad). */
+export const LegalPage = ({ content, children, after }: { content: LegalPageContent; children?: ReactNode; after?: ReactNode }) => {
     const ui = useUi();
     return (
         <div className="mx-auto max-w-3xl px-4 py-10 md:px-8 md:py-16">
@@ -31,11 +32,12 @@ export const LegalPage = ({ content, children }: { content: LegalPageContent; ch
             {content.updated && <p className="mt-3 text-sm text-quaternary">{fmt(ui.legalUpdated, { date: content.updated })}</p>}
             <p className="mt-5 text-lg text-tertiary">{content.intro}</p>
             {children}
+            <AdPlacement name="pageTop" />
             <div className="mt-10">
                 <ContentSections sections={content.sections} />
             </div>
-            {/* Páginas cortas: solo la barra inferior, sin anuncios entre el texto. */}
-            <AnchorAd />
+            {after}
+            <AdPlacement name="pageBottom" />
         </div>
     );
 };

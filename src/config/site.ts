@@ -15,16 +15,39 @@ export const GOOGLE_SITE_VERIFICATION = import.meta.env.VITE_GOOGLE_SITE_VERIFIC
 export const BING_SITE_VERIFICATION = import.meta.env.VITE_BING_SITE_VERIFICATION || "";
 
 /**
- * Google AdSense. Si ADSENSE_CLIENT está vacío no se carga el script y los anuncios
- * se ven como un espacio reservado (útil en desarrollo o mientras aprueban el sitio).
+ * Placeholders de Ezoic (Ezoic → Monetization → Ad Placeholders). Cada número debe existir en el panel
+ * de Ezoic con el mismo ID; si allá tienen otro número, cámbialo aquí. Un placeholder que Ezoic no llena
+ * queda vacío y no ocupa espacio. La barra fija inferior y los laterales los pone Ezoic desde su panel
+ * (Anchor Ads / Side Rails), no el código.
  */
-export const ADSENSE_CLIENT = import.meta.env.VITE_ADSENSE_CLIENT || "";
-/** Bloque de display para los anuncios dentro de la página (debajo de la herramienta, entre el contenido y lateral). */
-export const ADSENSE_SLOT_DISPLAY = import.meta.env.VITE_ADSENSE_SLOT_DISPLAY || "";
-/** Barra fija inferior (320×50 en móvil, 728×90 en escritorio). Si no se define, usa el bloque de display. */
-export const ADSENSE_SLOT_ANCHOR = import.meta.env.VITE_ADSENSE_SLOT_ANCHOR || ADSENSE_SLOT_DISPLAY;
-/** Bloque de anuncio que se muestra antes de entregar la descarga. Si no se define, usa el bloque de display. */
-export const ADSENSE_SLOT_DOWNLOAD = import.meta.env.VITE_ADSENSE_SLOT_DOWNLOAD || ADSENSE_SLOT_DISPLAY;
+export const EZOIC_PLACEHOLDERS = {
+    /** Herramienta: justo debajo, donde el usuario ve sus resultados. */
+    toolBelow: 101,
+    /** Herramienta: panel antes de la primera descarga (el momento de más atención). */
+    toolDownload: 102,
+    /** Herramienta: dentro del texto, después del primer tercio. */
+    toolContentTop: 103,
+    /** Herramienta: dentro del texto, después del segundo tercio. */
+    toolContentMid: 104,
+    /** Herramienta: al terminar el texto, antes de las preguntas frecuentes. */
+    toolContentEnd: 105,
+    /** Herramienta: lateral fijo (solo escritorio). */
+    toolSidebar: 106,
+    /** Herramienta: final de la página, antes de las herramientas relacionadas. */
+    toolBottom: 107,
+    /** Inicio: debajo del buscador y la zona para soltar imágenes. */
+    homeBelowHero: 108,
+    /** Inicio: entre el directorio de herramientas y el texto. */
+    homeMid: 109,
+    /** Inicio: final de la página. */
+    homeBottom: 110,
+    /** Páginas informativas: después de la introducción. */
+    pageTop: 111,
+    /** Páginas informativas: al final del texto. */
+    pageBottom: 112,
+} as const;
+export type AdPlacementName = keyof typeof EZOIC_PLACEHOLDERS;
+
 /** Segundos que se muestra el anuncio antes de poder continuar con la descarga (solo la primera de cada visita). */
 export const DOWNLOAD_AD_SECONDS = 3;
 

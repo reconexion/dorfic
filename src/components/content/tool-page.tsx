@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 import { ChevronRight } from "@untitledui/icons";
 import { Link } from "react-router";
-import { AdSlot, AnchorAd, SIDEBAR_AD_ATTR } from "@/components/ads/ad-slot";
+import { AdPlacement } from "@/components/ads/ad-slot";
 import { ContentSections } from "@/components/content/content-sections";
 import { FaqList } from "@/components/content/faq";
 import { HeroBackground } from "@/components/content/hero-background";
@@ -52,16 +52,16 @@ const rise = (ms: number) => ({ ["--rise-delay" as string]: `${ms}ms` });
  * Estructura común de las páginas de herramienta (todo lo importante centrado):
  * H1 → herramienta (visible sin scroll) → anuncio → contenido útil + anuncio lateral → FAQ → relacionadas.
  *
- * Siempre hay un anuncio a la vista sin cansar: la barra inferior (o, en escritorio, el lateral fijo mientras
- * se ve), más solo dos dentro de la página (debajo de la herramienta y a mitad del contenido).
+ * Anuncios (Ezoic): debajo de la herramienta, en el panel de descarga (image-tool), tres dentro del texto
+ * (siempre rodeados de contenido), lateral fijo en escritorio y uno al final. Ezoic llena los que rinden.
  */
 export const ToolPage = ({ content }: { content: ToolContent }) => {
     const ui = useUi();
     const cards = useToolCards();
     const to = useLocalePath();
-    // Contenido en 2 mitades con un anuncio en medio (siempre rodeado de texto útil).
-    const half = Math.ceil(content.sections.length / 2);
-    const parts = [content.sections.slice(0, half), content.sections.slice(half)];
+    // Contenido en 3 partes con un anuncio después de cada una (siempre rodeados de texto útil).
+    const third = Math.ceil(content.sections.length / 3);
+    const parts = [content.sections.slice(0, third), content.sections.slice(third, third * 2), content.sections.slice(third * 2)];
 
     return (
         <>
@@ -98,7 +98,7 @@ export const ToolPage = ({ content }: { content: ToolContent }) => {
 
                     <SiblingLinks current={content.slug} label={ui.toolPage.siblings} />
 
-                    <AdSlot variant="below-tool" className="mt-10" />
+                    <AdPlacement name="toolBelow" />
                 </div>
             </section>
 
@@ -106,16 +106,21 @@ export const ToolPage = ({ content }: { content: ToolContent }) => {
                 <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-12">
                     <article className="max-w-3xl min-w-0">
                         <ContentSections sections={parts[0]} />
-                        <AdSlot variant="in-content" className="my-10" />
+                        {parts[1].length > 0 && <AdPlacement name="toolContentTop" />}
                         <ContentSections sections={parts[1]} />
+                        {parts[2].length > 0 && <AdPlacement name="toolContentMid" />}
+                        <ContentSections sections={parts[2]} />
+                        <AdPlacement name="toolContentEnd" />
                         <FaqList faqs={content.faqs} title={ui.toolPage.faq} />
                     </article>
                     <div className="hidden lg:block">
-                        <div className="sticky top-24" {...{ [SIDEBAR_AD_ATTR]: "" }}>
-                            <AdSlot variant="sidebar" />
+                        <div className="sticky top-24">
+                            <AdPlacement name="toolSidebar" desktopOnly className="[--ad-gap:0]" />
                         </div>
                     </div>
                 </div>
+
+                <AdPlacement name="toolBottom" className="mx-auto max-w-3xl" />
 
                 <section aria-labelledby="related-title" className="mt-12">
                     <h2 id="related-title" className="text-center text-display-xs font-bold text-primary md:text-display-sm">
@@ -124,8 +129,6 @@ export const ToolPage = ({ content }: { content: ToolContent }) => {
                     <ToolGrid slugs={content.related} className="mt-8" />
                 </section>
             </div>
-
-            <AnchorAd />
         </>
     );
 };

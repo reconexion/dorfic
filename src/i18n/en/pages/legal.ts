@@ -95,7 +95,7 @@ export const privacidad: LegalPageContent = {
         {
             heading: "4. Advertising and third-party cookies",
             paragraphs: [
-                "Dorfic is funded by ads. We may show ads from Google AdSense. Google and its partners use cookies or other identifiers to show ads based on your previous visits to this and other websites, and to measure their performance.",
+                "Dorfic is funded by ads. Ads are managed by Ezoic, which works with Google and other advertising networks. Ezoic, Google and their partners use cookies or other identifiers to show ads based on your previous visits to this and other websites, and to measure their performance.",
                 "You can turn off personalized advertising in Google's Ad Settings (adssettings.google.com) or visit www.aboutads.info to opt out of other vendors' cookies. For more information on how Google uses data, see policies.google.com/technologies/partner-sites. Where required by law, we will ask for your consent before using advertising cookies.",
             ],
         },

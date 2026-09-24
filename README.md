@@ -63,15 +63,30 @@ También puedes subirlo sin Git: `npm run build && npx wrangler pages deploy bui
 
 En Cloudflare: **Analytics & Logs → Web Analytics → Add a site**, copia el token y guárdalo en `VITE_CF_BEACON_TOKEN`. (Si el sitio está en Pages con dominio de Cloudflare también puedes activarlo con un clic desde el panel, sin token.)
 
-## Anuncios (Google AdSense)
+## Anuncios (Ezoic)
 
-- Los espacios están en `src/components/ads/ad-slot.tsx`. Tienen **altura fija** para no causar CLS, están etiquetados como "Publicidad" y nunca cubren la herramienta ni quedan pegados a botones.
-- Distribución por página de herramienta: debajo de la herramienta, dos dentro del contenido (separados por texto), uno antes de las herramientas relacionadas y uno fijo en la barra lateral de escritorio. En el inicio: uno bajo el hero y otro tras el directorio.
-- Opcional: en AdSense puedes activar **Auto ads → Anchor (anuncio de anclaje)** para móvil; se descarta con un toque y no tapa la herramienta.
-- Cuando AdSense te apruebe:
-    1. Pega el script de AdSense donde indica el comentario en `src/root.tsx` (`<head>`).
-    2. Reemplaza el `<div data-ad-slot>` de `ad-slot.tsx` por el bloque `<ins class="adsbygoogle">` (instrucciones en el comentario del archivo).
-    3. Crea `public/ads.txt` con la línea que te da AdSense.
+- Los scripts (consentimiento de Gatekeeper primero, luego Ezoic) se insertan al inicio del `<head>` de todas las páginas en el build (`react-router.config.ts`, `HEAD_SCRIPTS`).
+- `ads.txt`: `/ads.txt` redirige (301) a adstxtmanager (`server/server.ts`, `REDIRECTS`).
+- Los placeholders están en `src/config/site.ts` (`EZOIC_PLACEHOLDERS`). **Cada ID debe existir en Ezoic → Monetization → Ad Placeholders**; si Ezoic te asignó otros números, cámbialos ahí.
+
+| ID | Nombre | Dónde |
+|---|---|---|
+| 101 | `toolBelow` | Herramienta: debajo de la herramienta (donde aparecen los resultados) |
+| 102 | `toolDownload` | Herramienta: panel antes de la primera descarga |
+| 103 | `toolContentTop` | Herramienta: dentro del texto, tras el primer tercio |
+| 104 | `toolContentMid` | Herramienta: dentro del texto, tras el segundo tercio |
+| 105 | `toolContentEnd` | Herramienta: final del texto, antes de las preguntas frecuentes |
+| 106 | `toolSidebar` | Herramienta: lateral fijo (solo escritorio) |
+| 107 | `toolBottom` | Herramienta: final de la página |
+| 108 | `homeBelowHero` | Inicio: debajo del buscador |
+| 109 | `homeMid` | Inicio: tras el directorio de herramientas |
+| 110 | `homeBottom` | Inicio: final |
+| 111 | `pageTop` | Acerca / Contacto / Privacidad / Términos: tras la introducción |
+| 112 | `pageBottom` | Acerca / Contacto / Privacidad / Términos: final |
+
+- Un placeholder que Ezoic no llena queda vacío y no ocupa espacio; el margen solo aparece cuando hay anuncio (`.ad-placement` en `globals.css`).
+- Ninguno va encima de la herramienta ni pegado a botones. La barra fija inferior (**Anchor Ads**) y los laterales de pantalla ancha (**Side Rails**) se activan en el panel de Ezoic, no en el código.
+- La página de Privacidad incluye `<span id="ezoic-privacy-policy-embed">`, que Ezoic llena con la lista de sus socios (requisito de Ezoic).
 
 ## SEO
 

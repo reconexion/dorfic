@@ -9,5 +9,6 @@ export async function loader({ request }: { request: Request }): Promise<LegalLo
 export const meta = legalMeta("privacidad");
 
 export default function Page({ loaderData }: { loaderData: LegalLoaderData }) {
-    return <LegalPage content={loaderData.content} />;
+    // Ezoic llena este elemento con la lista de sus socios publicitarios y sus cookies (requisito de Ezoic).
+    return <LegalPage content={loaderData.content} after={<span id="ezoic-privacy-policy-embed" />} />;
 }

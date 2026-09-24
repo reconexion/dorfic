@@ -96,7 +96,7 @@ export const privacidad: LegalPageContent = {
         {
             heading: "4. Publicidade e cookies de terceiros",
             paragraphs: [
-                "A Dorfic é financiada por anúncios. Podemos exibir anúncios do Google AdSense. O Google e seus parceiros usam cookies ou outros identificadores para mostrar anúncios com base nas suas visitas anteriores a este e a outros sites, e para medir o desempenho deles.",
+                "A Dorfic é financiada por anúncios. Os anúncios são gerenciados pela Ezoic, que trabalha com o Google e outras redes de publicidade. A Ezoic, o Google e seus parceiros usam cookies ou outros identificadores para mostrar anúncios com base nas suas visitas anteriores a este e a outros sites, e para medir o desempenho deles.",
                 "Você pode desativar a publicidade personalizada nas Configurações de anúncios do Google (adssettings.google.com) ou visitar www.aboutads.info para desativar cookies de outros fornecedores. Para saber mais sobre como o Google usa os dados, consulte policies.google.com/technologies/partner-sites. Quando a lei exigir, pediremos seu consentimento antes de usar cookies de publicidade.",
             ],
         },
