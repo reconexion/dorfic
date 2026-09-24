@@ -23,10 +23,29 @@ const PORT = Number(process.env.PORT) || 8080;
 
 /**
  * Redirecciones 301 fijas a otros sitios.
- * - /ads.txt: lo administra adstxtmanager (el estándar ads.txt permite un redirect a otro dominio).
+ * /ads.txt se sirve desde public/ads.txt (línea de AdSense). Cuando Ezoic apruebe el sitio, borra ese archivo
+ * y vuelve a redirigir a su adstxtmanager (que ya incluye a Google):
+ *   "/ads.txt": "https://srv.adstxtmanager.com/19390/dorfic.online",
  */
-const REDIRECTS: Record<string, string> = {
-    "/ads.txt": "https://srv.adstxtmanager.com/19390/dorfic.online",
+const REDIRECTS: Record<string, string> = {};
+
+/**
+ * Encabezados de seguridad en todas las respuestas. No se limita script-src: AdSense, Ezoic y el CMP cargan
+ * scripts e iframes de muchos dominios que cambian, y una lista cerrada rompería los anuncios.
+ * - HSTS: solo HTTPS durante un año.
+ * - CSP: nadie puede meter el sitio en un iframe (clickjacking), sin <base> ni plugins, formularios solo al
+ *   propio sitio, y cualquier recurso http:// se pide por https://.
+ * - COOP: aísla la pestaña de otras ventanas, pero deja abrir las de los anuncios.
+ * - Permissions-Policy: el sitio no usa cámara, micrófono, ubicación ni dispositivos; nadie puede pedirlos.
+ */
+const SECURITY_HEADERS: Record<string, string> = {
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "Content-Security-Policy": "frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; upgrade-insecure-requests",
+    "X-Frame-Options": "SAMEORIGIN",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), usb=(), serial=(), hid=(), bluetooth=(), midi=()",
 };
 
 const CONTENT_TYPES: Record<string, string> = {
@@ -111,6 +130,7 @@ const notFoundFor = (pathname: string) => {
 };
 
 const server = createServer((req, res) => {
+    for (const [name, value] of Object.entries(SECURITY_HEADERS)) res.setHeader(name, value);
     const url = new URL(req.url ?? "/", "http://localhost");
     let pathname: string;
     try {
@@ -161,7 +181,6 @@ const server = createServer((req, res) => {
         "Content-Type": file.type,
         "Cache-Control": status === 200 ? file.cacheControl : "no-cache",
         ETag: file.etag,
-        "X-Content-Type-Options": "nosniff",
     };
     if ("setCookie" in decision) headers["Set-Cookie"] = decision.setCookie;
 
