@@ -48,6 +48,17 @@ export const EZOIC_PLACEHOLDERS = {
 } as const;
 export type AdPlacementName = keyof typeof EZOIC_PLACEHOLDERS;
 
+/** Cliente de AdSense (el script adsbygoogle.js se carga en el <head> desde el build, react-router.config.ts). */
+export const ADSENSE_CLIENT = "ca-pub-9690751631806166";
+
+/**
+ * Posiciones que usan una unidad de AdSense en lugar del placeholder de Ezoic
+ * (AdSense → Anuncios → Por unidad de anuncio → ID de la unidad, "data-ad-slot").
+ */
+export const ADSENSE_SLOTS: Partial<Record<AdPlacementName, string>> = {
+    toolBelow: "2768659716",
+};
+
 /** Segundos que se muestra el anuncio antes de poder continuar con la descarga (solo la primera de cada visita). */
 export const DOWNLOAD_AD_SECONDS = 3;
 

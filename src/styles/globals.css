@@ -69,11 +69,17 @@ body {
     font-kerning: normal;
 }
 
-/* Anuncios de Ezoic (AdPlacement): el espacio alrededor solo aparece cuando Ezoic llenó el placeholder,
+/* Anuncios (AdPlacement): el espacio alrededor solo aparece cuando Ezoic o AdSense llenaron el espacio,
    así uno vacío no deja huecos en la página. */
-.ad-placement:has(> [id^="ezoic-pub-ad-placeholder-"]:not(:empty)) {
+.ad-placement:has(> [id^="ezoic-pub-ad-placeholder-"]:not(:empty)),
+.ad-placement:has(> ins.adsbygoogle[data-ad-status="filled"]) {
     margin-block: var(--ad-gap, 2.5rem);
     text-align: center;
+}
+
+/* AdSense marca data-ad-status="unfilled" cuando no hay anuncio: se oculta para no dejar un hueco. */
+ins.adsbygoogle[data-ad-status="unfilled"] {
+    display: none !important;
 }
 
 /* Hide the default expand arrow on Safari.  */
